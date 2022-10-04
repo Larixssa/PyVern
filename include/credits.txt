@@ -1,0 +1,5 @@
+- Lua files created by jonstoler:
+https://github.com/jonstoler
+
+- Original Repository:
+https://github.com/jonstoler/lua-snip

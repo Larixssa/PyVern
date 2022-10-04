@@ -1,0 +1,63 @@
+local file = {}
+
+--- Reads the data from a file and returns it.
+---
+--- [Original Source](https://stackoverflow.com/a/31857671)
+function file.readFile(path)
+	local open = io.open
+	local f = open(path, "rb")
+	if not f then
+		return nil
+	end
+	local c = f:read "*a"
+	f:close()
+	return c
+end
+
+--- Writes data and text to a specific file.
+function file.writeFile(file, text)
+	local open = io.open
+	local f = open(file, "a")
+	if not f then return nil end
+	f:write(text, "\n")
+	f:close()
+end
+
+--- No description.
+function file.writeFileBytes(file, text)
+	local open = io.open
+	local f = open(file, "wb")
+	if not f then return nil end
+	f:write(text)
+	f:close()
+end
+
+--- Create a file.
+function file.createFile(filename, ext)
+	local strutils = require("src.modules.qyvern_strutils")
+	local errorutils = require("src.modules.qyvern_errorutils")
+	local sys = require("src.modules.qyvern_sys")
+	local qos = require("src.modules.qylib.q_os")
+	local jit = require("jit")
+	if not (strutils.checkNil(filename) and strutils.checkNil(ext)) then
+		if (strutils.typeCheck(filename, "string") and strutils.typeCheck(ext, "string")) then
+			local file = filename .. "." .. ext
+			if (strutils.checkStringEquals(jit.os, qos.getCurrentOS("Linux"))) then
+				sys.osExecute("touch " .. file)
+			elseif (strutils.checkStringEquals(jit.os, qos.getCurrentOS("Windows"))) then
+				sys.osExecute("type nul > " .. file)
+			end
+		end
+	else
+		errorutils.execThrowError("missing", "filename and file extension")
+	end
+end
+
+--- Clears all of the contents from a specific file.
+---
+--- [Original Source](https://stackoverflow.com/a/45805718)
+function file.clearFile(file)
+	io.open(file, "w"):close()
+end
+
+return file

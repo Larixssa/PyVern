@@ -1,0 +1,3 @@
+cls
+echo Running QyVern...
+luajit src/main.lua

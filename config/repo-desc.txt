@@ -1,0 +1,8 @@
+# QyVern
+
+QyVern is a GUI interface that can be used as an engine for counterfeit and mocked up exploits.
+
+- This application requires LuaJIT (2.0.5) to run.
+- Also supports external .lua modules for abilities of modifying the application.
+
+NOTE: See "docs/BUILDING or MODIFYING" to learn more about Building and Modding QyVern.
