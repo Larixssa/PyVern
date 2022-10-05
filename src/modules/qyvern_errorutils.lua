@@ -28,7 +28,7 @@ function errorutils.localUserProfileExists(uname)
 	local strutils = require("src.modules.qyvern_strutils")
 	local oututils = require("src.modules.qyvern_oututils")
 	if not (strutils.checkNil(uname)) then
-		oututils.writeStr("User: \"" .. uname .."\", already exists.")
+		oututils.writeStr("User: \"" .. uname .."\", already exists.\n")
 	end
 end
 

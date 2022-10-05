@@ -32,7 +32,7 @@ function init_client.InitClient(doClearScreen, showOptions, showTitle, execLoad)
 	if not (strutils.checkEmpty(profile)) then
 		local profile_str
 		if (strutils.checkStringEquals(profile, "Guest")) then
-			profile_str = "Guest"
+			profile_str = "Guest#" .. math.random(1, 9999)
 		else
 			profile_str = profile
 		end
