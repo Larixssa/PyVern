@@ -53,6 +53,26 @@ function file.createFile(filename, ext)
 	end
 end
 
+--- Check if a file exists.
+---
+--- [Original Source](https://stackoverflow.com/a/40195356)
+function file.exists(file)
+	local ok, err, code = os.rename(file, file)
+	if not ok then
+		if (code == 13) then
+			return true
+		end
+	end
+	return ok, err
+end
+
+--- Check if a directory exists
+---
+--- [Original Source](https://stackoverflow.com/a/40195356)
+function file.chkDir(path)
+	return file.exists(path.."/")
+end
+
 --- Clears all of the contents from a specific file.
 ---
 --- [Original Source](https://stackoverflow.com/a/45805718)
