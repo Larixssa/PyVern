@@ -47,6 +47,15 @@ function strutils.checkEmpty(str)
 	return isEmpty
 end
 
+--- Check if a string is nil or empty.
+function strutils.checkNilOrEmpty(str)
+	local nil_or_empty = false
+	if (str == nil or str == "" or str == " ") then
+		nil_or_empty = true
+	end
+	return nil_or_empty
+end
+
 --- Checks if the first string is equal to the second string.
 ---
 --- *`stra` == `strb` = true*
