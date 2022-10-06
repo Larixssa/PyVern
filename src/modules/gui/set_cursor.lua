@@ -39,7 +39,7 @@ function set_cursor.init()
 		local cursor_f
 		if (strutils.checkStringEquals(cursor, "cancel")) then cancel = true end
 		if not (cancel) then
-			console_display.displayConsoleMessage("Selected cursor type: \"" .. cursor .. ".\"")
+			console_display.displayConsoleMessage("Selected cursor type: \"" .. cursor .. ".\"", "wf", logfile)
 			if (strutils.checkStringEquals(cursor, "cursor")) then
 				cursor_f = "cursor.txt"
 				cursor_str = "Cursor"
