@@ -19,7 +19,9 @@ function init_client.InitClient(doClearScreen, showOptions, showTitle, execLoad)
 	local version = require("src.modules.display.version")
 	local paths = require("src.modules.cl.paths")
 	local profile = file.readFile("config/profile.txt")
+	local id = file.readFile(paths.getConfigProperty("id"))
 	local title_display = title.create("QyVern") .. " - " .. version.create(file.readFile(paths.getFile("version.txt"))) .. "\n"
+	local id_str
 
 	if (doClearScreen) then sys.clearScreen() end
 
@@ -29,12 +31,14 @@ function init_client.InitClient(doClearScreen, showOptions, showTitle, execLoad)
 
 	if (showOptions) then options_handler.initOptions() end
 
+	if not (strutils.checkEmpty(id)) then id_str = id else id_str = "" end
+
 	if not (strutils.checkEmpty(profile)) then
 		local profile_str
 		if (strutils.checkStringEquals(profile, "Guest")) then
 			profile_str = "Guest#" .. math.random(1, 9999)
 		else
-			profile_str = profile
+			profile_str = profile .. " " .. id_str
 		end
 		cursor.createCursor(profile_str .. " " .. file.readFile("config/cursor.txt"))
 	else

@@ -9,7 +9,7 @@ function options_handler.initOptions()
 		"exit",
 		"clear",
 		"get-repo",
-		"create-account",
+		"set-profile",
 		"set-cursor"
 	}
 

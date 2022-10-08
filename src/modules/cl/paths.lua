@@ -26,7 +26,8 @@ function paths.getConfigProperty(_property)
 		"cursor",
 		"profile",
 		"repo-desc",
-		"selection-cursor"
+		"selection-cursor",
+		"id"
 	}
 	if not (strutils.checkNil(_property)) then
 		for i = 1, #properties_table do
