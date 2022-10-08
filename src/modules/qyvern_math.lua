@@ -72,4 +72,49 @@ function qyvern_math.expo(e, n)
 	return v
 end
 
+--- Get the area of certain shapes.
+---
+--- *[ PARAMETERS DESCRIPTION ]*
+---
+--- *``shape``*: string
+---
+--- *``n``*: number
+---
+--- *``m``*: number <- (used for getting the area of a triangle and etc.)
+---
+--- *``l``*: number <- (used for getting the area of a trapezoid / trapezium and etc.)
+function qyvern_math.getAreaOf(shape, n, m, p)
+	local strutils  = require("src.modules.qyvern_strutils")
+	local m_utils = require("src.modules.qyvern_mathutils")
+	local convert = require("src.modules.qylib.convert")
+	local s_equals = strutils.checkStringEquals
+	local positive = m_utils.checkPositive
+	local area
+	local v
+	if (strutils.typeCheck(shape, "string")) then
+		if not (strutils.checkNil(shape)) then
+			if (positive(n) and positive(m) and positive(p)) then
+				if (s_equals(shape, "square")) then
+					local side = n * n
+					area = side
+				elseif (s_equals(shape, "rectangle") or s_equals(shape, "parallelogram")) then
+					local l, w = n, m
+					area = l * w
+				elseif (s_equals(shape, "triangle")) then
+					local base, height = n, m
+					area = (base * height) / 2
+				elseif (s_equals(shape, "circle")) then
+					local pi, radius = math.pi --[[ π ]], n * n
+					area = pi * (radius)
+				elseif (s_equals(shape, "trapezoid") or s_equals(shape, "trapezium")) then
+					local base1, base2, height = n, m, p
+					area = (base1 + base2) / 2 * height
+				end
+			end
+		end
+	end
+	v = convert.toNumber(area)
+	return v
+end
+
 return qyvern_math
