@@ -34,6 +34,7 @@ function command_parser.parseCommand(cmd)
 	local command_properties = require("src.modules.cl.command_properties")
 	local paths = require("src.modules.cl.paths")
 	local logfile = "logs/logfile.txt"
+	local def_init_val = true
 
 	if (strutils.startsWith(cmd, "-")) then
 		if not (strutils.checkNil(cmd)) then
@@ -70,6 +71,8 @@ function command_parser.parseCommand(cmd)
 					end)
 				end
 			end
+
+			command_properties.do_init = def_init_val
 
 			if (command_properties.do_init) then
 				init.InitClient(command_properties.clear, command_properties.show_options, command_properties.show_title, command_properties.show_load)
