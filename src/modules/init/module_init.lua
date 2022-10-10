@@ -5,7 +5,7 @@ local function getExternalModulePath()
 end
 
 local function getModuleFile(f, ext)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local parsed
 	if not (strutils.checkNil(f) and strutils.checkNil(ext)) then
 		parsed = f .. ext
@@ -14,8 +14,8 @@ local function getModuleFile(f, ext)
 end
 
 function module_init.initModule(module_file)
-	local strutils = require("src.modules.qyvern_strutils")
-	local errorutils = require("src.modules.qyvern_errorutils")
+	local strutils = require("src.modules.io.qystrutils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
 	local script = require("src.modules.qylib.script")
 	local paths = require("src.modules.cl.paths")
 	if not (strutils.checkNil(module_file)) then
@@ -28,9 +28,9 @@ function module_init.initModule(module_file)
 end
 
 function module_init.getModuleData(module_file)
-	local strutils = require("src.modules.qyvern_strutils")
-	local errorutils = require("src.modules.qyvern_errorutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local file = require("src.modules.qylib.file")
 	local paths = require("src.modules.cl.paths")
 	if not (strutils.checkNil(module_file)) then

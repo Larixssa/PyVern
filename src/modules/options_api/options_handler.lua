@@ -2,7 +2,7 @@ local options_handler = {}
 
 function options_handler.initOptions()
 	local option = require("src.modules.options_api.option")
-	local oututils = require("src.modules.qyvern_oututils")
+	local oututils = require("src.modules.io.qyoututils")
 	local text_divider = require("src.modules.display.text_divider")
 
 	local short_names = {

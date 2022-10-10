@@ -34,8 +34,8 @@ end
 
 --- Create a file.
 function file.createFile(filename, ext)
-	local strutils = require("src.modules.qyvern_strutils")
-	local errorutils = require("src.modules.qyvern_errorutils")
+	local strutils = require("src.modules.io.qystrutils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
 	local sys = require("src.modules.qyvern_sys")
 	local qos = require("src.modules.qylib.q_os")
 	local jit = require("jit")

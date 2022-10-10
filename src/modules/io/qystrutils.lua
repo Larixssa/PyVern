@@ -82,7 +82,7 @@ end
 ---		| "thread"
 ---		| "userdata"
 function strutils.typeCheck(var, _type)
-	local oututils = require("src.modules.qyvern_oututils")
+	local oututils = require("src.modules.io.qyoututils")
 	local types = {
 		"nil", "number", "string",
 		"boolean", "table", "function",

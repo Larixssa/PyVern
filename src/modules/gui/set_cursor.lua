@@ -7,8 +7,8 @@ local function getSCursor()
 end
 
 function set_cursor.init()
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local file = require("src.modules.qylib.file")
 	local init = require("src.modules.init.init_client")
 	local console_display = require("src.modules.display.console_displayer")

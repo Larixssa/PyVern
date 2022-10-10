@@ -2,7 +2,7 @@ local proc_load = {}
 
 local function wfConsoleDisplay(str)
 	local cd = require("src.modules.display.console_displayer")
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local paths = require("src.modules.cl.paths")
 	if not (strutils.checkNil(str)) then
 		cd.displayConsoleMessage(str, "wf", paths.getLogfilePath())
@@ -11,8 +11,8 @@ end
 
 function proc_load.doProcessLoad(load_str, min_t, max_t, max_i)
 	local errorutils = require("src.modules.qyvern_errorutils")
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local sys = require("src.modules.qyvern_sys")
 	local thread = require("src.modules.qylib.thread")
 	local mnt

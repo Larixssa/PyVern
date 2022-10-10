@@ -2,9 +2,9 @@ local thread = {}
 
 --- Roblox users rn: wait() :troll:
 function thread.sleep(n)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local convert = require("src.modules.qylib.convert")
-	local sys = require("src.modules.qyvern_sys")
+	local sys = require("src.modules.sys.qysys")
 	local qos = require("src.modules.qylib.q_os")
 	local jit = require("jit")
 	if (n < 0) then

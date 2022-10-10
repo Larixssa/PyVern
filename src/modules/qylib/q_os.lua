@@ -2,8 +2,8 @@ local q_os = {}
 
 --- Get and return the current operating system platform.
 function q_os.getCurrentOS(osName)
-	local strutils = require("src.modules.qyvern_strutils")
-	local errorutils = require("src.modules.qyvern_errorutils")
+	local strutils = require("src.modules.io.qystrutils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
 	local jit = require("jit")
 
 	local r_osName

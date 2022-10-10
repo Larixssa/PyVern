@@ -4,7 +4,7 @@ local convert = {}
 ---
 --- *`10` -> `"10"`*
 function convert.toString(v)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local converted_string
 	if not (strutils.checkNil(v)) then
 		converted_string = tostring(v)
@@ -19,7 +19,7 @@ end
 ---
 --- *`"10"` -> `10`*
 function convert.toNumber(a)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local converted_num
 	if not (strutils.checkNil(a)) then
 		converted_num = tonumber(a)

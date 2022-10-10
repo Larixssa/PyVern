@@ -2,8 +2,8 @@ local oututils = {}
 
 local write = io.write
 
-local strutils = require("src.modules.qyvern_strutils")
-local errorutils = require("src.modules.qyvern_errorutils")
+local strutils = require("src.modules.io.qystrutils")
+local errorutils = require("src.modules.error_handlers.qyerrorutils")
 
 --- Standard "print" function with nil checking.
 function oututils.lnOutStr(str, createNewLine)

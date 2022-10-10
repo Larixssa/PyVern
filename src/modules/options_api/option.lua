@@ -1,9 +1,9 @@
 local option = {}
 
 function option.createOption(option_short_name, option_name, has_description, option_description)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils =  require("src.modules.qyvern_oututils")
-	local errorutils = require("src.modules.qyvern_errorutils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils =  require("src.modules.io.qyoututils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
 	local conv_short_name
 	if not(strutils.checkNil(option_short_name)) then
 		conv_short_name = string.lower(option_short_name)

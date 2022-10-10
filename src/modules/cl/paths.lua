@@ -1,7 +1,7 @@
 local paths = {}
 
 function paths.getFile(file)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local parsed_file
 	if not (strutils.checkNil(file)) then
 		if (strutils.typeCheck(file, "string")) then
@@ -19,7 +19,7 @@ end
 
 --- Gets files from the "config" folder and returns them.
 function paths.getConfigProperty(_property)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local matching_property = false
 	local parsed_property
 	local properties_table = {
@@ -45,7 +45,7 @@ end
 --- Returns files from the "shared" folder.
 function paths.getSharedFile(filename)
 	local file = require("src.modules.qylib.file")
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local parsed
 	if not (strutils.checkNil(filename)) then
 		if (strutils.typeCheck(filename, "string")) then

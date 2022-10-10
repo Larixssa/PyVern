@@ -2,8 +2,8 @@ local cursor = {}
 
 --- Sets the client's cursor.
 function cursor.createCursor(cursorCh)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	if not (strutils.checkNil(cursorCh)) then
 		oututils.writeStr(cursorCh .. " ")
 	else

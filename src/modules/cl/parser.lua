@@ -16,7 +16,7 @@ parser.availablecommands = {
 }
 
 local function console_writefile(msg, logfile)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local console_displayer = require("src.modules.display.console_displayer")
 	if not (strutils.checkNil(msg) and strutils.checkNil(logfile)) then
 		console_displayer.displayConsoleMessage(msg, "wf", logfile)
@@ -24,7 +24,7 @@ local function console_writefile(msg, logfile)
 end
 
 local function commandLog(cmd)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local logfile = "logs/logfile.txt"
 	if not (strutils.checkNil(cmd)) then
 		if (strutils.checkStringEquals(cmd, "exit")) then console_writefile("Client closed.", logfile) end
@@ -41,9 +41,9 @@ local function commandLog(cmd)
 end
 
 function parser.parseCommand(cmd)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
-	local sys = require("src.modules.qyvern_sys")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
+	local sys = require("src.modules.sys.qysys")
 	local init = require("src.modules.init.init_client")
 	local file = require("src.modules.qylib.file")
 	local console_displayer = require("src.modules.display.console_displayer")

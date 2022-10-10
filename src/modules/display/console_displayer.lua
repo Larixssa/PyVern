@@ -7,8 +7,8 @@ local console_displayer = {}
 ---		| "std" -> Standard message output
 function console_displayer.displayConsoleMessage(msg, mode, file_path)
 	local console_message = require("src.modules.display.console_message")
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local file = require("src.modules.qylib.file")
 	if not (strutils.checkNil(msg) and strutils.checkNil(file_path) and strutils.checkNil(mode)) then
 		local cmsg = console_message.create() .. msg

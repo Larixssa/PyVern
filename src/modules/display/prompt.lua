@@ -2,9 +2,9 @@ local prompt = {}
 
 --- Create and display a prompt.
 function prompt.createPrompt(prompt_msg, prompt_type, prompt_subtype)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils =  require("src.modules.qyvern_oututils")
-	local errorutils = require("src.modules.qyvern_errorutils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils =  require("src.modules.io.qyoututils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
 	if not (strutils.checkNil(prompt_msg) and strutils.checkNil(prompt_type)) then
 		oututils.writeStr(prompt_msg .. " ")
 		if (strutils.checkStringEquals(prompt_type, "yn") or strutils.checkStringEquals(prompt_type, "yx")) then
@@ -27,8 +27,8 @@ end
 
 --- Creates a callback for a prompt.
 function prompt.promptCallback(s_opt, e_opt, ce_opt, callback, second_callback)
-	local strutils = require("src.modules.qyvern_strutils")
-	local errorutils = require("src.modules.qyvern_errorutils")
+	local strutils = require("src.modules.io.qystrutils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
 	local file = require("src.modules.qylib.file")
 	local paths = require("src.modules.cl.paths")
 	local nilcheck = strutils.checkNil

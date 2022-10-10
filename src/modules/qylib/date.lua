@@ -8,7 +8,7 @@ local date = {}
 ---		| "cur_time" -> H:M:S
 ---		| "std_time" -> H:M
 function date.get(type)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local dt
 	if not (strutils.checkNil(type) or strutils.checkEmpty(type)) then
 		if (strutils.checkStringEquals(type, "day_today")) then

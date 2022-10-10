@@ -11,7 +11,7 @@ local text = {
 
 function loading.openLoadingState()
 	local thread = require("src.modules.qylib.thread")
-	local sys = require("src.modules.qyvern_sys")
+	local sys = require("src.modules.sys.qysys")
 	local console_displayer = require("src.modules.display.console_displayer")
 	local logfile = "logs/logfile.txt"
 	local table_hash = #text

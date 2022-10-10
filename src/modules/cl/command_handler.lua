@@ -2,7 +2,7 @@ local command_handler = {}
 
 function command_handler.initCommands()
 	local command = require("src.modules.cl.command")
-	local oututils = require("src.modules.qyvern_oututils")
+	local oututils = require("src.modules.io.qyoututils")
 	local text_divider = require("src.modules.display.text_divider")
 
 	local names = {

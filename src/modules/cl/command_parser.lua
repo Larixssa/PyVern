@@ -10,7 +10,7 @@ command_parser.flags = {
 }
 
 local function console_writefile(message, logfile)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local console_displayer = require("src.modules.display.console_displayer")
 	if not (strutils.checkNil(message) and strutils.checkNil(logfile)) then
 		console_displayer.displayConsoleMessage(message, "wf", logfile)
@@ -28,7 +28,7 @@ end
 
 function command_parser.parseCommand(cmd)
 	local init = require("src.modules.init.init_client")
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local command = require("src.modules.cl.command")
 	local console_displayer = require("src.modules.display.console_displayer")
 	local command_properties = require("src.modules.cl.command_properties")
@@ -69,6 +69,14 @@ function command_parser.parseCommand(cmd)
 						oututils.lnOutStr("\n[ Available commands. ]", true)
 						cmd_handler.initCommands()
 					end)
+				end
+			end
+
+			if (strutils.startsWith(cmd, "-manual")) then
+				if (strutils.findString(cmd, "/create-script")) then
+					command.flag_execute(cmd, "/options", command_parser.flags, function()
+					end)
+				else
 				end
 			end
 

@@ -1,7 +1,7 @@
 local failed_config_setup = {}
 
 function failed_config_setup.create()
-	local oututils = require("src.modules.qyvern_oututils")
+	local oututils = require("src.modules.io.qyoututils")
 	local link = require("src.modules.qylib.link")
 	local prompt = require("src.modules.display.prompt")
 	local doc_link = "https://github.com/Equinoxtic/QyVern/blob/master/docs/CONFIGURATION.md"

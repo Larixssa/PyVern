@@ -7,7 +7,7 @@ local function getSCursor()
 end
 
 local function initialize_options()
-	local oututils = require("src.modules.qyvern_oututils")
+	local oututils = require("src.modules.io.qyoututils")
 	local options = {
 		"[username] - Set the username.",
 		"[id] - Set the ID for the profile."
@@ -20,11 +20,11 @@ local function initialize_options()
 end
 
 local function set_username()
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local prompt = require("src.modules.display.prompt")
 	local file = require("src.modules.qylib.file")
-	local errorutils = require("src.modules.qyvern_errorutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local console_display = require("src.modules.display.console_displayer")
 	local paths = require("src.modules.cl.paths")
 	local read = io.read
@@ -57,11 +57,11 @@ local function set_username()
 end
 
 local function set_id()
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local prompt = require("src.modules.display.prompt")
 	local file = require("src.modules.qylib.file")
-	local errorutils = require("src.modules.qyvern_errorutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local errorutils = require("src.modules.error_handlers.qyerrorutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local console_display = require("src.modules.display.console_displayer")
 	local paths = require("src.modules.cl.paths")
 	local convert = require("src.modules.qylib.convert")
@@ -93,8 +93,8 @@ local function set_id()
 end
 
 function set_profile.init()
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local console_display = require("src.modules.display.console_displayer")
 	local init = require("src.modules.init.init_client")
 	local thread = require("src.modules.qylib.thread")

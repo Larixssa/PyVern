@@ -2,8 +2,8 @@ local text_divider = {}
 
 --- Displays a line with a certain length.
 function text_divider.createTextDivider(lines_length, text_ch, do_newline, second_newline)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils =  require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils =  require("src.modules.io.qyoututils")
 
 	if (second_newline) then oututils.writeStr(oututils.writeEscSeq("\n")) end
 
