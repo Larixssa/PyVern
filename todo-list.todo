@@ -1,0 +1,8 @@
+- [ ] New script creation commands.
+Ex:
+--create-script-file
+
+- [ ] Make branches for creating module / scripts.
+Ex:
+dev-module
+dev-script

@@ -12,7 +12,10 @@ parser.availablecommands = {
 	"set-profile",
 	"set-cursor",
 	"get-guidelines",
-	"list-commands"
+	"list-commands",
+	"get-client-version",
+	"get-lua-version",
+	"get-luajit-version"
 }
 
 local function console_writefile(msg, logfile)
@@ -25,19 +28,41 @@ end
 
 local function commandLog(cmd)
 	local strutils = require("src.modules.io.qystrutils")
+	local s_equals = strutils.checkStringEquals
 	local logfile = "logs/logfile.txt"
 	if not (strutils.checkNil(cmd)) then
-		if (strutils.checkStringEquals(cmd, "exit")) then console_writefile("Client closed.", logfile) end
-		if (strutils.checkStringEquals(cmd, "clear")) then console_writefile("Screen cleared.", logfile) end
-		if (strutils.checkStringEquals(cmd, "get-repo")) then console_writefile("Repository link created.", logfile) end
-		if (strutils.checkStringEquals(cmd, "make-logs-dir")) then console_writefile("Created \"logs\" directory.", logfile) end
-		if (strutils.checkStringEquals(cmd, "new-log-file")) then console_writefile("Created new \"logfile.\"", logfile) end
+		if (s_equals(cmd, "exit")) then console_writefile("Client closed.", logfile) end
+		if (s_equals(cmd, "clear")) then console_writefile("Screen cleared.", logfile) end
+		if (s_equals(cmd, "get-repo")) then console_writefile("Repository link created.", logfile) end
+		if (s_equals(cmd, "make-logs-dir")) then console_writefile("Created \"logs\" directory.", logfile) end
+		if (s_equals(cmd, "new-log-file")) then console_writefile("Created new \"logfile.\"", logfile) end
 		-- if (strutils.checkStringEquals(cmd, "clear-log-file")) then console_writefile("Cleared logfile.", logfile) end
-		if (strutils.checkStringEquals(cmd, "set-profile")) then console_writefile("Entered to profile settings.", logfile) end
-		if (strutils.checkStringEquals(cmd, "set-cursor")) then console_writefile("Customizing Cursor...", logfile) end
-		if (strutils.checkStringEquals(cmd, "get-guidelines")) then console_writefile("Getting and Reading the Guidelines...", logfile) end
-		if (strutils.checkStringEquals(cmd, "list-commands")) then console_writefile("Listing available commands.", logfile) end
+		if (s_equals(cmd, "set-profile")) then console_writefile("Entered to profile settings.", logfile) end
+		if (s_equals(cmd, "set-cursor")) then console_writefile("Customizing Cursor...", logfile) end
+		if (s_equals(cmd, "get-guidelines")) then console_writefile("Getting and Reading the Guidelines...", logfile) end
+		if (s_equals(cmd, "list-commands")) then console_writefile("Listing available commands.", logfile) end
+		if (s_equals(cmd, "get-client-version")) then console_writefile("Getting Client version.", logfile) end
+		if (s_equals(cmd, "get-lua-version")) then console_writefile("Getting Lua version.", logfile) end
+		if (s_equals(cmd, "get-luajit-version")) then console_writefile("Getting LuaJIT version.", logfile) end
 	end
+end
+
+local function getVersionOf(_type)
+	local strutils = require("src.modules.io.qystrutils")
+	local file = require("src.modules.qylib.file")
+	local version_type
+	if (strutils.typeCheck(_type, "string")) then
+		if not (strutils.checkNil(_type)) then
+			if (strutils.checkStringEquals(_type, "client")) then
+				version_type = file.readFile("version.txt") .. file.readFile("build.txt")
+			elseif (strutils.checkStringEquals(_type, "lua")) then
+				version_type = file.readFile("lua-version.txt")
+			elseif (strutils.checkStringEquals(_type, "luajit")) then
+				version_type =  file.readFile("luajit-version.txt")
+			end
+		end
+	end
+	return version_type
 end
 
 function parser.parseCommand(cmd)
@@ -51,6 +76,7 @@ function parser.parseCommand(cmd)
 	local set_cursor = require("src.modules.gui.set_cursor")
 	local command_handler = require("src.modules.cl.command_handler")
 	local command_properties = require("src.modules.cl.command_parser")
+	local s_equals = strutils.checkStringEquals
 	local logfile = "logs/logfile.txt"
 	local def_init_val = true
 
@@ -61,19 +87,19 @@ function parser.parseCommand(cmd)
 		commandLog(cmd)
 
 		-- Exits the program
-		if (strutils.checkStringEquals(cmd, "exit")) then
+		if (s_equals(cmd, "exit")) then
 			sys.exitProgram()
 			sys.clearScreen()
 			def_init_val = false
 		end
 
 		-- Clears the screen
-		if (strutils.checkStringEquals(cmd, "clear")) then
+		if (s_equals(cmd, "clear")) then
 			sys.clearScreen()
 		end
 
 		-- Get QyVern repo link
-		if (strutils.checkStringEquals(cmd, "get-repo")) then
+		if (s_equals(cmd, "get-repo")) then
 			local _link = "https://github.com/Equinoxtic/QyVern"
 			oututils.writeStr(
 				"\n" .. file.readFile("config/repo-desc.txt") .. "\n\n- Repository link: " .. _link .. oututils.writeEscSeq("\n\n")
@@ -81,41 +107,53 @@ function parser.parseCommand(cmd)
 		end
 
 		-- Make a logs directory
-		if (strutils.checkStringEquals(cmd, "make-logs-dir")) then
+		if (s_equals(cmd, "make-logs-dir")) then
 			sys.osExecute("mkdir logs")
 		end
 
 		-- Make a log file for console logging
-		if (strutils.checkStringEquals(cmd, "new-log-file")) then
+		if (s_equals(cmd, "new-log-file")) then
 			file.createFile("logs/logfile", "txt")
 		end
 
 		-- Clear log file
-		if (strutils.checkStringEquals(cmd, "clear-log-file")) then
+		if (s_equals(cmd, "clear-log-file")) then
 			file.clearFile("logs/logfile.txt")
 			oututils.writeStr("Successfully cleared the log file.\n")
 		end
 
 		-- Enter account creation
-		if (strutils.checkStringEquals(cmd, "set-profile")) then
+		if (s_equals(cmd, "set-profile")) then
 			set_prof.init()
 		end
 
 		-- Enter cursor customization
-		if (strutils.checkStringEquals(cmd, "set-cursor")) then
+		if (s_equals(cmd, "set-cursor")) then
 			set_cursor.init()
 		end
 
 		-- Get QyVern's Guidelines
-		if (strutils.checkStringEquals(cmd, "get-guidelines")) then
+		if (s_equals(cmd, "get-guidelines")) then
 			local src_guidelines_link = "https://github.com/Equinoxtic/QyVern/blob/master/GUIDELINES.txt"
 			oututils.writeStr(
 				"\n" .. file.readFile("GUIDELINES.txt") .. oututils.writeEscSeq("\n") .. "(Guidelines Source): " .. src_guidelines_link .. oututils.writeEscSeq("\n\n")
 			)
 		end
 
+		if (s_equals(cmd, "get-client-version")) then
+			oututils.lnOutStr(getVersionOf("client"), true)
+		end
+
+		if (s_equals(cmd, "get-lua-version")) then
+			oututils.lnOutStr(getVersionOf("lua"), true)
+		end
+
+		if (s_equals(cmd, "get-luajit-version")) then
+			oututils.lnOutStr(getVersionOf("luajit"), true)
+		end
+
 		-- Get the list of commands
-		if (strutils.checkStringEquals(cmd, "list-commands")) then
+		if (s_equals(cmd, "list-commands")) then
 			command_handler.initCommands()
 		end
 
