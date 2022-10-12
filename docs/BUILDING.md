@@ -75,6 +75,7 @@ scoop install vscodium
 More Options:
 
 **Sublime Text: https://www.sublimetext.com/3**
+
 **Notepad++: https://notepad-plus-plus.org/downloads/**
 
 ## Extra optional prerequisites
