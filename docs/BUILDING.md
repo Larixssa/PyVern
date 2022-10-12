@@ -26,8 +26,6 @@ If you want to download LuaJIT, here's a zip download for it.
 
 Next, copy the path of the extracted zip file of the LuaJIT folder.
 
-**``C:\Users\USER-HERE\LuaJIT-2.0.5\src``**
-
 After that, open up a Developer Command prompt of Visual Studio 2019 with MSVC installed.
 
 Then run:
