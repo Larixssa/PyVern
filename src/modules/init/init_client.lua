@@ -20,7 +20,7 @@ function init_client.InitClient(doClearScreen, showOptions, showTitle, execLoad)
 	local paths = require("src.modules.cl.paths")
 	local profile = file.readFile("config/profile.txt")
 	local id = file.readFile(paths.getConfigProperty("id"))
-	local title_display = title.create("QyVern") .. " - " .. version.create(file.readFile(paths.getFile("version.txt"))) .. "\n"
+	local title_display = title.create("QyVern") .. " - " .. version.create(file.readFile(paths.getFile("version.txt")), true) .. "\n"
 	local id_str
 
 	if (doClearScreen) then sys.clearScreen() end

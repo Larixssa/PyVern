@@ -2,11 +2,14 @@ local command_parser = {}
 
 command_parser.commands = {
 	"-list",
-	"-manual"
+	"-version"
 }
 
 command_parser.flags = {
-	"/options"
+	"/options",
+	"/client",
+	"/lua",
+	"/luajit"
 }
 
 local function console_writefile(message, logfile)
@@ -18,7 +21,7 @@ local function console_writefile(message, logfile)
 end
 
 local function commandLog(cmd)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local logfile = "logs/logfile.txt"
 	if not (strutils.checkNil(cmd)) then
 		if (strutils.checkStringEquals(cmd, "-list")) then console_writefile("Listing commands, objects and flags.", logfile) end
@@ -29,10 +32,12 @@ end
 function command_parser.parseCommand(cmd)
 	local init = require("src.modules.init.init_client")
 	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	local command = require("src.modules.cl.command")
 	local console_displayer = require("src.modules.display.console_displayer")
 	local command_properties = require("src.modules.cl.command_properties")
 	local paths = require("src.modules.cl.paths")
+	local file = require("src.modules.qylib.file")
 	local logfile = "logs/logfile.txt"
 	local def_init_val = true
 
@@ -72,12 +77,24 @@ function command_parser.parseCommand(cmd)
 				end
 			end
 
-			if (strutils.startsWith(cmd, "-manual")) then
-				if (strutils.findString(cmd, "/create-script")) then
-					command.flag_execute(cmd, "/options", command_parser.flags, function()
+			if (strutils.startsWith(cmd, "-version")) then
+				local flag_exec = command.flag_execute
+				local find_str = strutils.findString
+				local version_str
+				if (find_str(cmd, "/client")) then
+					flag_exec(cmd, "/client", command_parser.flags, function()
+						version_str = file.readFile("version.txt") .. file.readFile("build.txt")
 					end)
-				else
+				elseif (find_str(cmd, "/lua")) then
+					flag_exec(cmd, "/lua", command_parser.flags, function()
+						version_str = file.readFile("lua-version.txt")
+					end)
+				elseif (find_str(cmd, "/luajit")) then
+					flag_exec(cmd, "/luajit", command_parser.flags, function()
+						version_str = file.readFile("luajit-version.txt")
+					end)
 				end
+				oututils.lnOutStr(version_str, true)
 			end
 
 			command_properties.do_init = def_init_val
