@@ -36,7 +36,8 @@ end
 function file.createFile(filename, ext)
 	local strutils = require("src.modules.io.qystrutils")
 	local errorutils = require("src.modules.error_handlers.qyerrorutils")
-	local sys = require("src.modules.qyvern_sys")
+	local sys = require("src.modules.sys.qysys")
+	local ps_exec  = require("src.modules.sys.ps_exec")
 	local qos = require("src.modules.qylib.q_os")
 	local jit = require("jit")
 	if not (strutils.checkNil(filename) and strutils.checkNil(ext)) then
@@ -45,7 +46,7 @@ function file.createFile(filename, ext)
 			if (strutils.checkStringEquals(jit.os, qos.getCurrentOS("Linux"))) then
 				sys.osExecute("touch " .. file)
 			elseif (strutils.checkStringEquals(jit.os, qos.getCurrentOS("Windows"))) then
-				sys.osExecute("type nul > " .. file)
+				ps_exec.exec_common_action("new-item", filename .. ext)
 			end
 		end
 	else

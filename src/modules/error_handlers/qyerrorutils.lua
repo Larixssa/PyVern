@@ -2,8 +2,8 @@ local errorutils = {}
 
 --- Execute and throw an error on the user on a certain cause.
 function errorutils.execThrowError(_type, kw)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils =  require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils =  require("src.modules.io.qyoututils")
 	local escSeqWrite = oututils.writeEscSeq
 	if not (strutils.checkNil(_type) and strutils.checkNil(kw)) then
 		if (strutils.checkStringEquals(_type, "nilornull")) then
@@ -18,8 +18,8 @@ end
 
 --- Throws an invalid command error.
 function errorutils.invalidCommandError(command_str)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	if not (strutils.checkNil(command_str)) then
 		oututils.writeStr("Invalid command " .. "\"" .. command_str .. "\"" .. oututils.writeEscSeq("\n"))
 	end
@@ -27,8 +27,8 @@ end
 
 --- Throws an error if the local user's profile already exists.
 function errorutils.localUserProfileExists(uname)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	if not (strutils.checkNil(uname)) then
 		oututils.writeStr("User: \"" .. uname .."\", already exists.\n")
 	end
@@ -36,8 +36,8 @@ end
 
 --- Throws an error if the variable data type is invalid.
 function errorutils.invalidTypeError(var, _type)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	if not (strutils.checkNil(var) and strutils.checkNil(_type)) then
 		if (strutils.typeCheck(var) and strutils.typeCheck(_type)) then
 			oututils.writeStr("Invalid type - \"" .. _type .. "\", for variable: " .. var)
@@ -46,8 +46,8 @@ function errorutils.invalidTypeError(var, _type)
 end
 
 function errorutils.setupFailed(_type, msg_callback)
-	local strutils = require("src.modules.qyvern_strutils")
-	local oututils = require("src.modules.qyvern_oututils")
+	local strutils = require("src.modules.io.qystrutils")
+	local oututils = require("src.modules.io.qyoututils")
 	if (strutils.checkNil(_type) and strutils.checkNil(msg_callback)) then
 		if (strutils.checkStringEquals(_type, "config_failed")) then
 			oututils.writeStr("Setup failed, configuration files needed.")

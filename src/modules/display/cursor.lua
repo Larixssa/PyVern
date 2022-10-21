@@ -13,7 +13,7 @@ end
 
 --- Gets the selection cursor.
 function cursor.getSelectionCursor(scursor_file)
-	local strutils = require("src.modules.qyvern_strutils")
+	local strutils = require("src.modules.io.qystrutils")
 	local file = require("src.modules.qylib.file")
 	local _scursor
 	if (strutils.typeCheck(scursor_file, "string")) then
