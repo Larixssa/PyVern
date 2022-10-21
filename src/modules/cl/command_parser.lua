@@ -34,7 +34,11 @@ local function commandLog(cmd)
 	local logfile = "logs/logfile.txt"
 	if not (strutils.checkNil(cmd)) then
 		if (strutils.checkStringEquals(cmd, "-list")) then console_writefile("Listing commands, objects and flags.", logfile) end
-		if (strutils.checkStringEquals(cmd, "-manual")) then console_writefile("Opening the Client Manual.", logfile) end
+		-- if (strutils.checkStringEquals(cmd, "-manual")) then console_writefile("Opening the Client Manual.", logfile) end
+		if (strutils.checkStringEquals(cmd, "-version")) then console_writefile("Getting the version...", logfile) end
+		if (strutils.checkStringEquals(cmd, "-math")) then console_writefile("π.", logfile) end
+		if (strutils.checkStringEquals(cmd, "--create-script")) then console_writefile("Entering script create mode.", logfile) end
+		if (strutils.checkStringEquals(cmd, "--create-module")) then console_writefile("Entering module create mode.", logfile) end
 	end
 end
 
@@ -109,13 +113,21 @@ function command_parser.parseCommand(cmd)
 
 			if (str_starts(cmd, "-math")) then
 				if (find_str(cmd, "-addition")) then
-					math_gui.init_math_ui("addition")
+					flag_exec(cmd, "-addition", command_parser.flags, function()
+						math_gui.init_ui("addition")
+					end)
 				elseif (find_str(cmd, "-subtraction")) then
-					math_gui.init_math_ui("subtraction")
+					flag_exec(cmd, "-subtraction", command_parser.flags, function()
+						math_gui.init_ui("subtraction")
+					end)
 				elseif (find_str(cmd, "-multiplication")) then
-					math_gui.init_math_ui("multiplication")
+					flag_exec(cmd, "-multiplication", command_parser.flags, function()
+						math_gui.init_ui("multiplication")
+					end)
 				elseif (find_str(cmd, "-division")) then
-					math_gui.init_math_ui("division")
+					flag_exec(cmd, "-division", command_parser.flags, function()
+						math_gui.init_ui("division")
+					end)
 				end
 			end
 
