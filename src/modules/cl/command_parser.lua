@@ -3,6 +3,7 @@ local command_parser = {}
 command_parser.commands = {
 	"-list",
 	"-version",
+	"-math",
 	"--create-script",
 	"--create-module"
 }
@@ -12,6 +13,10 @@ command_parser.flags = {
 	"/client",
 	"/lua",
 	"/luajit",
+	"-addition",
+	"-subtraction",
+	"-multiplication",
+	"-division",
 	"/built-in",
 	"/external"
 }
@@ -41,6 +46,7 @@ function command_parser.parseCommand(cmd)
 	local console_displayer = require("src.modules.display.console_displayer")
 	local command_properties = require("src.modules.cl.command_properties")
 	local create_gui = require("src.modules.gui.create_gui")
+	local math_gui = require("src.modules.gui.math_ui")
 	local paths = require("src.modules.cl.paths")
 	local file = require("src.modules.qylib.file")
 	local logfile = "logs/logfile.txt"
@@ -99,6 +105,18 @@ function command_parser.parseCommand(cmd)
 					end)
 				end
 				oututils.lnOutStr(version_str, true)
+			end
+
+			if (str_starts(cmd, "-math")) then
+				if (find_str(cmd, "-addition")) then
+					math_gui.init_math_ui("addition")
+				elseif (find_str(cmd, "-subtraction")) then
+					math_gui.init_math_ui("subtraction")
+				elseif (find_str(cmd, "-multiplication")) then
+					math_gui.init_math_ui("multiplication")
+				elseif (find_str(cmd, "-division")) then
+					math_gui.init_math_ui("division")
+				end
 			end
 
 			if (str_starts(cmd, "--create-script")) then
