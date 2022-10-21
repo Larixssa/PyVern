@@ -54,7 +54,7 @@ local function getVersionOf(_type)
 	if (strutils.typeCheck(_type, "string")) then
 		if not (strutils.checkNil(_type)) then
 			if (strutils.checkStringEquals(_type, "client")) then
-				version_type = file.readFile("version.txt") .. file.readFile("build.txt")
+				version_type = file.readFile("version.txt") .. " - " .. file.readFile("build.txt")
 			elseif (strutils.checkStringEquals(_type, "lua")) then
 				version_type = file.readFile("lua-version.txt")
 			elseif (strutils.checkStringEquals(_type, "luajit")) then
@@ -69,6 +69,7 @@ function parser.parseCommand(cmd)
 	local strutils = require("src.modules.io.qystrutils")
 	local oututils = require("src.modules.io.qyoututils")
 	local sys = require("src.modules.sys.qysys")
+	local ps_exec = require("src.modules.sys.ps_exec")
 	local init = require("src.modules.init.init_client")
 	local file = require("src.modules.qylib.file")
 	local console_displayer = require("src.modules.display.console_displayer")
@@ -108,7 +109,7 @@ function parser.parseCommand(cmd)
 
 		-- Make a logs directory
 		if (s_equals(cmd, "make-logs-dir")) then
-			sys.osExecute("mkdir logs")
+			ps_exec.exec_common_action("make-directory", "logs")
 		end
 
 		-- Make a log file for console logging
@@ -140,14 +141,17 @@ function parser.parseCommand(cmd)
 			)
 		end
 
+		-- Get the client version
 		if (s_equals(cmd, "get-client-version")) then
 			oututils.lnOutStr(getVersionOf("client"), true)
 		end
 
+		-- Get the version of Lua
 		if (s_equals(cmd, "get-lua-version")) then
 			oututils.lnOutStr(getVersionOf("lua"), true)
 		end
 
+		-- Get the version of LuaJIT
 		if (s_equals(cmd, "get-luajit-version")) then
 			oututils.lnOutStr(getVersionOf("luajit"), true)
 		end

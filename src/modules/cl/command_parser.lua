@@ -2,14 +2,18 @@ local command_parser = {}
 
 command_parser.commands = {
 	"-list",
-	"-version"
+	"-version",
+	"--create-script",
+	"--create-module"
 }
 
 command_parser.flags = {
 	"/options",
 	"/client",
 	"/lua",
-	"/luajit"
+	"/luajit",
+	"/built-in",
+	"/external"
 }
 
 local function console_writefile(message, logfile)
@@ -36,10 +40,14 @@ function command_parser.parseCommand(cmd)
 	local command = require("src.modules.cl.command")
 	local console_displayer = require("src.modules.display.console_displayer")
 	local command_properties = require("src.modules.cl.command_properties")
+	local create_gui = require("src.modules.gui.create_gui")
 	local paths = require("src.modules.cl.paths")
 	local file = require("src.modules.qylib.file")
 	local logfile = "logs/logfile.txt"
 	local def_init_val = true
+	local flag_exec = command.flag_execute
+	local find_str = strutils.findString
+	local str_starts = strutils.startsWith
 
 	if (strutils.startsWith(cmd, "-")) then
 		if not (strutils.checkNil(cmd)) then
@@ -59,16 +67,16 @@ function command_parser.parseCommand(cmd)
 			end
 			]]
 
-			if (strutils.startsWith(cmd, "-list")) then
-				if (strutils.findString(cmd, "/options")) then
-					command.flag_execute(cmd, "/options", command_parser.flags, function()
+			if (str_starts(cmd, "-list")) then
+				if (find_str(cmd, "/options")) then
+					flag_exec(cmd, "/options", command_parser.flags, function()
 						local opts_handler = require("src.modules.options_api.options_handler")
 						local oututils = require("src.modules.qyvern_oututils")
 						oututils.lnOutStr("\n[ Available options. ]", true)
 						opts_handler.initOptions()
 					end)
 				else
-					command.execute(function()
+				flag_exec(function()
 						local cmd_handler = require("src.modules.cl.command_handler")
 						local oututils = require("src.modules.qyvern_oututils")
 						oututils.lnOutStr("\n[ Available commands. ]", true)
@@ -77,9 +85,7 @@ function command_parser.parseCommand(cmd)
 				end
 			end
 
-			if (strutils.startsWith(cmd, "-version")) then
-				local flag_exec = command.flag_execute
-				local find_str = strutils.findString
+			if (str_starts(cmd, "-version")) then
 				local version_str
 				if (find_str(cmd, "/client")) then
 					flag_exec(cmd, "/client", command_parser.flags, function()
@@ -95,6 +101,22 @@ function command_parser.parseCommand(cmd)
 					end)
 				end
 				oututils.lnOutStr(version_str, true)
+			end
+
+			if (str_starts(cmd, "--create-script")) then
+				create_gui.initGui("create-script")
+			end
+
+			if (str_starts(cmd, "--create-module")) then
+				if (find_str(cmd, "/built-in")) then
+					flag_exec(cmd, "/built-in", command_parser.flags, function()
+						create_gui.initGui("create-module")
+					end)
+				elseif (find_str(cmd, "/external")) then
+					flag_exec(cmd, "/external", command_parser.flags, function()
+						create_gui.initGui("create-ext-module")
+					end)
+				end
 			end
 
 			command_properties.do_init = def_init_val
