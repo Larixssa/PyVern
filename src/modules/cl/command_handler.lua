@@ -6,15 +6,24 @@ function command_handler.initCommands()
 	local text_divider = require("src.modules.display.text_divider")
 
 	local names = {
-		"List command."
+		"List command.",
+		"Version command.",
+		"Create a script.",
+		"Create a module"
 	}
 
 	local prefixes = {
-		"list"
+		"list",
+		"version",
+		"-create-script",
+		"-create-module"
 	}
 
 	local descriptions = {
-		"List all available commands."
+		"List all available commands.",
+		"Shows version of the Client, Lua, and LuaJIT",
+		"Create a Custom Script for the client",
+		"Create a Built-in or External module for the client."
 	}
 
 	oututils.createEscSeq("\n", true)
@@ -26,7 +35,7 @@ function command_handler.initCommands()
 		)
 		oututils.createEscSeq("\n", true)
 	end
-	text_divider.createTextDivider(73, "-", true, true)
+	text_divider.createTextDivider(73, "-", true, false)
 	oututils.createEscSeq("\n", true)
 end
 

@@ -28,7 +28,7 @@ local function create_gui_type(cur_gui)
 			elseif (strutils.checkStringEquals(current_gui, "external-module-create")) then
 				ui_name = "External Module"
 			end
-			oututils.lnOutStr("[ " .. ui_name .. " Creation GUI. ]", true)
+			oututils.lnOutStr("\n[ " .. ui_name .. " Creation GUI. ]", true)
 			oututils.writeStr(getSCursor() .. " New " .. ui_name .. " Name: ")
 			name = read()
 			if (strutils.typeCheck(name, "string")) then

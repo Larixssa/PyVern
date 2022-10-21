@@ -54,7 +54,7 @@ local function getVersionOf(_type)
 	if (strutils.typeCheck(_type, "string")) then
 		if not (strutils.checkNil(_type)) then
 			if (strutils.checkStringEquals(_type, "client")) then
-				version_type = file.readFile("version.txt") .. " - " .. file.readFile("build.txt")
+				version_type = file.readFile("version.txt") .. file.readFile("build.txt")
 			elseif (strutils.checkStringEquals(_type, "lua")) then
 				version_type = file.readFile("lua-version.txt")
 			elseif (strutils.checkStringEquals(_type, "luajit")) then

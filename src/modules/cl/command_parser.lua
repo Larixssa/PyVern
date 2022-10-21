@@ -71,17 +71,15 @@ function command_parser.parseCommand(cmd)
 				if (find_str(cmd, "/options")) then
 					flag_exec(cmd, "/options", command_parser.flags, function()
 						local opts_handler = require("src.modules.options_api.options_handler")
-						local oututils = require("src.modules.qyvern_oututils")
+						local oututils = require("src.modules.io.qyoututils")
 						oututils.lnOutStr("\n[ Available options. ]", true)
 						opts_handler.initOptions()
 					end)
 				else
-				flag_exec(function()
-						local cmd_handler = require("src.modules.cl.command_handler")
-						local oututils = require("src.modules.qyvern_oututils")
-						oututils.lnOutStr("\n[ Available commands. ]", true)
-						cmd_handler.initCommands()
-					end)
+					local cmd_handler = require("src.modules.cl.command_handler")
+					local oututils = require("src.modules.io.qyoututils")
+					oututils.lnOutStr("\n[ Available commands. ]", true)
+					cmd_handler.initCommands()
 				end
 			end
 
@@ -89,7 +87,7 @@ function command_parser.parseCommand(cmd)
 				local version_str
 				if (find_str(cmd, "/client")) then
 					flag_exec(cmd, "/client", command_parser.flags, function()
-						version_str = file.readFile("version.txt") .. file.readFile("build.txt")
+						version_str = file.readFile("version.txt") .. " - " .. file.readFile("build.txt")
 					end)
 				elseif (find_str(cmd, "/lua")) then
 					flag_exec(cmd, "/lua", command_parser.flags, function()

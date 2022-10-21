@@ -9,7 +9,7 @@ function command.new(name, cmd_pref, description)
 	if not (strutils.checkNil(name) and strutils.checkNil(cmd_pref)) then
 		new_cmd_pref = strutils.lowerStr(cmd_pref)
 		if (strutils.typeCheck(name, "string") and strutils.typeCheck(cmd_pref, "string")) then
-			oututils.writeStr("[-" .. new_cmd_pref .. "] : " .. name .. "\n> " .. description)
+			oututils.writeStr("[-" .. new_cmd_pref .. "] : " .. name .. "\n> " .. description .. "\n")
 		end
 	else
 		errorutils.execThrowError("missing", "name and command prefix")
