@@ -84,13 +84,11 @@ end
 ---
 --- *``l``*: number <- (used for getting the area of a trapezoid / trapezium and etc.)
 function qyvern_math.getAreaOf(shape, n, m, p)
-	local strutils  = require("src.modules.qyvern_strutils")
-	local m_utils = require("src.modules.qyvern_mathutils")
-	local convert = require("src.modules.qylib.convert")
+	local strutils  = require("src.modules.io.qystrutils")
+	local m_utils = require("src.modules.math.qymathutils")
 	local s_equals = strutils.checkStringEquals
 	local positive = m_utils.checkPositive
 	local area
-	local v
 	if (strutils.typeCheck(shape, "string")) then
 		if not (strutils.checkNil(shape)) then
 			if (positive(n) and positive(m) and positive(p)) then
@@ -113,8 +111,12 @@ function qyvern_math.getAreaOf(shape, n, m, p)
 			end
 		end
 	end
-	v = convert.toNumber(area)
-	return v
+	return area
+end
+
+--- Get the number of pi. (π)
+function qyvern_math.getPi()
+	return 3.14159
 end
 
 return qyvern_math
