@@ -2,7 +2,9 @@
 Ex:
 --create-script-file
 
-- [ ] Make branches for creating module / scripts.
+- [ / ] Finish Math GUI.
+
+- [ X ] Make branches for creating module / scripts.
 Ex:
 dev-module
 dev-script
