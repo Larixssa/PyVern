@@ -1,7 +1,8 @@
-Alpha Build 0.0.13
+Alpha Build 0.0.14
 
-* New math interface.
-* Changelog tracking.
+* Updated math interface.
+* -math command now shows on commands list.
+* New getPi function for qymath module.
 
 That's all for the changelog.
 
