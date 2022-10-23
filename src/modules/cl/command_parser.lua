@@ -17,6 +17,7 @@ command_parser.flags = {
 	"-subtraction",
 	"-multiplication",
 	"-division",
+	"-exponent",
 	"/built-in",
 	"/external"
 }
@@ -114,20 +115,45 @@ function command_parser.parseCommand(cmd)
 			if (str_starts(cmd, "-math")) then
 				if (find_str(cmd, "-addition")) then
 					flag_exec(cmd, "-addition", command_parser.flags, function()
-						math_gui.init_ui("addition")
+						math_gui.init_ui("addition", "standard")
 					end)
 				elseif (find_str(cmd, "-subtraction")) then
 					flag_exec(cmd, "-subtraction", command_parser.flags, function()
-						math_gui.init_ui("subtraction")
+						math_gui.init_ui("subtraction", "standard")
 					end)
 				elseif (find_str(cmd, "-multiplication")) then
 					flag_exec(cmd, "-multiplication", command_parser.flags, function()
-						math_gui.init_ui("multiplication")
+						math_gui.init_ui("multiplication", "standard")
 					end)
 				elseif (find_str(cmd, "-division")) then
 					flag_exec(cmd, "-division", command_parser.flags, function()
-						math_gui.init_ui("division")
+						math_gui.init_ui("division", "standard")
 					end)
+				elseif (find_str(cmd, "-exponent")) then
+					flag_exec(cmd, "-exponent", command_parser.flags, function()
+						math_gui.init_ui("exponent", "standard")
+					end)
+				else
+					local math_options = {
+						"-addition",
+						"-subtraction",
+						"-multiplication",
+						"-division",
+						"-exponent"
+					}
+
+					local math_descriptions = {
+						"sum of two numbers.",
+						"difference of two numbers.",
+						"product of two numbers.",
+						"quotient of two numbers.",
+						"exponent of a number."
+					}
+
+					oututils.lnOutStr("[ Math command FLAGS. ]", true)
+					for i = 1, #math_options or #math_descriptions do
+						oututils.lnOutStr("[ " .. math_options[i] .. "] : " .. "Get the " .. math_descriptions[i], true)
+					end
 				end
 			end
 

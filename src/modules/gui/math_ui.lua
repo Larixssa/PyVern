@@ -37,6 +37,9 @@ local function operations(operation_type, std_operation)
 				elseif (str_equals(operation_type, "division")) then
 					operation = "/"
 					c = _math.getQuotOf(na, nb)
+				elseif (str_equals(operation_type, "exponent")) then
+					operation = "^"
+					c = _math.expo(na, nb)
 				end
 				oututils.lnOutStr("\n[FORMULA]:\n\na " .. operation .. " b = c \n\n" .. na .. " " .. operation .. " " .. nb .. " = " .. c .. "\n\n")
 				console_displayer.displayConsoleMessage("Operation: " .. na .. " " .. operation .. " " .. nb .. " = " .. c .. " Successfully operated.", paths.getLogfilePath()) 
@@ -45,13 +48,13 @@ local function operations(operation_type, std_operation)
 	end
 end
 
-function math_ui.init_ui(ui_type)
+function math_ui.init_ui(ui_type, std_operation)
 	local strutils = require("src.modules.io.qystrutils")
 	local oututils = require("src.modules.io.qyoututils")
 	oututils.lnOutStr("\n[ Math Calculator GUI. ]", true)
 	if (strutils.typeCheck(ui_type, "string")) then
 		if not (strutils.checkNil(ui_type)) then
-			operations(ui_type)
+			operations(ui_type, std_operation)
 		end
 	end
 end
