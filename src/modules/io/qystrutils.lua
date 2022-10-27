@@ -20,53 +20,43 @@ end
 
 --- Check if a string is "nil."
 function strutils.checkNil(str)
-	local isNil = false
 	if (str == nil) then
-		isNil = true
+		return true
 	end
-	return isNil
 end
 
 --- Find a certain string inside of a string.
 function strutils.findString(s, f_str)
-	local found = false
 	if not (s == nil and f_str == nil) then
 		if (string.find(s, f_str)) then
-			found = true
+			return true
 		end
 	end
-	return found
 end
 
 --- Check if a string is empty.
 function strutils.checkEmpty(str)
-	local isEmpty = false
 	if (str == "" or str == " ") then
-		isEmpty = true
+		return true
 	end
-	return isEmpty
 end
 
 --- Check if a string is nil or empty.
 function strutils.checkNilOrEmpty(str)
-	local nil_or_empty = false
 	if (str == nil or str == "" or str == " ") then
-		nil_or_empty = true
+		return true
 	end
-	return nil_or_empty
 end
 
 --- Checks if the first string is equal to the second string.
 ---
 --- *`stra` == `strb` = true*
 function strutils.checkStringEquals(str1, str2)
-	local isEqual = false
 	if not (strutils.checkNil(str1) and strutils.checkNil(str2)) then
 		if (str1 == str2) then
-			isEqual = true
+			return true
 		end
 	end
-	return isEqual
 end
 
 --- Checks if a variable is equal to a data type
