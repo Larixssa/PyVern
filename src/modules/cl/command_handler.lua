@@ -10,7 +10,8 @@ function command_handler.initCommands()
 		"Version command.",
 		"Math command.",
 		"Create a script.",
-		"Create a module"
+		"Create a module.",
+		"Open a Link."
 	}
 
 	local prefixes = {
@@ -18,15 +19,17 @@ function command_handler.initCommands()
 		"version",
 		"math",
 		"-create-script",
-		"-create-module"
+		"-create-module",
+		"-open-link"
 	}
 
 	local descriptions = {
 		"List all available commands.",
 		"Shows version of the Client, Lua, and LuaJIT",
-		"Perform simple math calculations.",
+		"Perform simple math calculations / operations.",
 		"Create a Custom Script for the client",
-		"Create a Built-in or External module for the client."
+		"Create a Built-in or External module for the client.",
+		"Open a link from the console."
 	}
 
 	oututils.createEscSeq("\n", true)

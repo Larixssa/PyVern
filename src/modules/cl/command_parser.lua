@@ -5,7 +5,8 @@ command_parser.commands = {
 	"-version",
 	"-math",
 	"--create-script",
-	"--create-module"
+	"--create-module",
+	"--open-link"
 }
 
 command_parser.flags = {
@@ -40,6 +41,7 @@ local function commandLog(cmd)
 		if (strutils.checkStringEquals(cmd, "-math")) then console_writefile("π.", logfile) end
 		if (strutils.checkStringEquals(cmd, "--create-script")) then console_writefile("Entering script create mode.", logfile) end
 		if (strutils.checkStringEquals(cmd, "--create-module")) then console_writefile("Entering module create mode.", logfile) end
+		if (strutils.checkStringEquals(cmd, "--open-link")) then console_writefile("Opening QySearch.com.", logfile) end
 	end
 end
 
@@ -52,6 +54,7 @@ function command_parser.parseCommand(cmd)
 	local command_properties = require("src.modules.cl.command_properties")
 	local create_gui = require("src.modules.gui.create_gui")
 	local math_gui = require("src.modules.gui.math_ui")
+	local link_gui = require("src.modules.gui.link_ui")
 	local paths = require("src.modules.cl.paths")
 	local file = require("src.modules.qylib.file")
 	local logfile = "logs/logfile.txt"
@@ -150,9 +153,9 @@ function command_parser.parseCommand(cmd)
 						"exponent of a number."
 					}
 
-					oututils.lnOutStr("[ Math command FLAGS. ]", true)
+					oututils.lnOutStr("\n[ Math command FLAGS. ]", true)
 					for i = 1, #math_options or #math_descriptions do
-						oututils.lnOutStr("[ " .. math_options[i] .. "] : " .. "Get the " .. math_descriptions[i], true)
+						oututils.lnOutStr("[" .. math_options[i] .. "] : " .. "Get the " .. math_descriptions[i], true)
 					end
 				end
 			end
@@ -171,6 +174,10 @@ function command_parser.parseCommand(cmd)
 						create_gui.initGui("create-ext-module")
 					end)
 				end
+			end
+
+			if (str_starts(cmd, "--open-link")) then
+				link_gui.create()
 			end
 
 			command_properties.do_init = def_init_val
