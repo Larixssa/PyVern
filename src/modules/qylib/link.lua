@@ -3,7 +3,7 @@ local link = {}
 local function runOSCheck(_parse_url_)
 	local strutils = require("src.modules.io.qystrutils")
 	local q_os =  require("src.modules.qylib.q_os")
-	local sys = require("src.modules.qyvern_sys")
+	local sys = require("src.modules.sys.qysys")
 	local jit = require("jit")
 	if (strutils.checkStringEquals(jit.os, q_os.getCurrentOS("Linux"))) then
 		sys.osExecute("xdg-open " .. _parse_url_)
