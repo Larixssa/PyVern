@@ -127,6 +127,10 @@ def command_parser(command_to_parse):
 
 # -----------------<  General functions  >----------------- #
 
+def get_file(file):
+	if not file == "":
+		return file
+
 def generate_credits():
 	cred = f"\nBy - {get_credits()} - Version: {get_version()}"
 	print(cred)
