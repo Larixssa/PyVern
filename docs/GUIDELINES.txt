@@ -3,16 +3,8 @@ Guidelines when modifying PyVern:
 * NEVER distribute illegal / malicious copies of PyVern.
 	- It is illegal to make such stuff like that.
 	- I will take action once a copy is reported to me.
-	- This also applies to modules.
+	- This can go the same with forks of the repository.
 
-* DO NOT use PyVern and custom scripts as a weapon for threat.
-	- Threatening to hack in a false manner can be 
-	  enough to scare everyone, and it'd even cause 
-	  you to get in legal trouble.
-
-* NEVER EVER make scripts into real exploits.
-	- Action will be taken once a script / module this 
-	  category gets found out.
-	- This is also a form of (probably) distributing
-	  malware, since exploits can be malicious to
-	  devices sometimes.
+* NEVER request a PR for insert malicious payloads / malware.
+	- Every PR in this repository gets researched and looked into.
+	- Once malicious payloads are found, we will decline / close the PR.
