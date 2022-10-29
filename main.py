@@ -12,7 +12,9 @@ import argparse
 RED = "\033[0;31m"
 ORANGE = "\033[0;38m"
 GREEN = "\033[0;32m"
+YELLOW = "\033[1;33m"
 CYAN = "\033[0;36m"
+LIGHT_CYAN = "\033[1;36m"
 PURPLE = "\033[0;35m"
 LIGHT_PURPLE = "\033[1;35m"
 LIGHT_WHITE = "\033[1;37m"
@@ -43,8 +45,8 @@ def get_version():
 
 def get_cursor(cursor_file):
 	if not cursor_file == "":
-		cursor_str = open(get_file("config/" + cursor_file + ".txt"), "r")
-		return cursor_str.read() + " "
+		cursor_str = open(get_file(f"config/{cursor_file}.txt"), "r")
+		return f"{cursor_str.read()} "
 
 def create_bar(bar_str, bar_length):
 	if not bar_str == "" and bar_length > 0:
@@ -57,16 +59,30 @@ def chk_cmd(cmdio, cmd):
 		if cmdio == cmd:
 			return True
 
-def get_repo():
-	repo_file = open(get_file("client_env/repo_desc.txt"))
-	return repo_file.read()
+def get_repo_desc():
+	repo_desc = f"""
+	{BOLD}{YELLOW}# PyVern{END}
+
+	A Shell Interface & and fork of {ITALIC}{CYAN}@Equinoxtic{END}'s QyVern.
+
+	This fork is completely made in Python and has 
+	exclusive new features that completely seperate it 
+	from the original.
+
+	{ITALIC}Requires Python (3.X){END}
+
+	; {ITALIC}Larixssa. <3{END}
+
+	{GREEN}Repository Link:{END} {CYAN}{ITALIC}https://github.com/Larixssa/QyVern-PY{END}
+	"""
+	return repo_desc
 
 # -----------------<  Parser functions  >----------------- #
 
 def parse_cmd(cmd_io):
 	if not cmd_io == "":
 
-		command_list = [
+		command_list = [ # Add custom commands here.
 			"exit",
 			"clear",
 			"get-repo"
@@ -81,13 +97,13 @@ def parse_cmd(cmd_io):
 		if parse == True:
 			command_parser(cmd_io)
 		else:
-			print(f"{RED}\n[ERROR] - Unavailable command: " + cmd_io + f"{END}")
+			print(f"{RED}\n[ERROR] - Unavailable command: {cmd_io}{END}")
 			main(False, False)
 
 def os_exec(command, mode):
 	if not command == "":
 		if mode == "ps":
-			os.system("powershell -command " + command)
+			os.system(f"powershell -command {command}")
 		elif mode == "default":
 			os.system(command)
 
@@ -103,7 +119,7 @@ def command_parser(command_to_parse):
 			os_exec("clear", "ps")
 
 		elif chk_cmd(command_to_parse, "get-repo"):
-			print("\n" + get_repo())
+			print(f"\n{get_repo_desc()}")
 
 		if not chk_cmd(command_to_parse, "exit"):
 			main(False, False)
@@ -111,12 +127,8 @@ def command_parser(command_to_parse):
 
 # -----------------<  General functions  >----------------- #
 
-def get_file(file):
-	if not file == "":
-		return file
-
 def generate_credits():
-	cred = "\nBy - " + get_credits() + " - Version: " + get_version()
+	cred = f"\nBy - {get_credits()} - Version: {get_version()}"
 	print(cred)
 
 def generate_title():
@@ -126,14 +138,14 @@ def generate_title():
 └─┘└ ┴  └┘ └─┘┴└─┘└┘
 	{END}"""
 	print(title, end="")
-	print("\n" + create_bar("=", 75))
+	print(f"\n{create_bar('-', 75)}")
 
 def init(gen_title, gen_creds):
 	if gen_title == True:
 		generate_title()
 	if gen_creds == True:
 		generate_credits()
-	print("\n" + get_cursor("cursor"), end="")
+	print(f"\n{get_cursor('cursor')}", end="")
 	prompt = input()
 	parse_cmd(prompt)
 
