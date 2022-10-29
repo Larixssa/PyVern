@@ -3,6 +3,8 @@ from os import system, path
 from random import randint
 from termcolor import cprint
 from pyfiglet import figlet_format
+import subprocess
+import os
 import argparse
 
 
@@ -50,24 +52,55 @@ def create_bar(bar_str, bar_length):
 	if not bar_str == "" and bar_length > 0:
 		return bar_str * bar_length
 
-# -----------------<  Parser functions  >----------------- #
-
-def parse_cmd(cmd_io):
-	if not cmd_io == "":
-		command_parser(cmd_io)
+# -----------------<  Custom functions  >----------------- #
 
 def chk_cmd(cmdio, cmd):
 	if not cmdio == "" and not cmd == "":
 		if cmdio == cmd:
 			return True
 
+# -----------------<  Parser functions  >----------------- #
+
+def parse_cmd(cmd_io):
+	if not cmd_io == "":
+
+		command_list = [
+			"exit",
+			"clear"
+		]
+
+		parse = False
+
+		for i in range(0, len(command_list)):
+			if cmd_io ==  command_list[i]:
+				parse = True
+		
+		if parse == True:
+			command_parser(cmd_io)
+		else:
+			print(f"{RED}\n[ERROR] - Unavailable command: " + cmd_io + f"{END}")
+			main(False, False)
+
+def os_exec(command, mode):
+	if not command == "":
+		if mode == "ps":
+			os.system("powershell -command " + command)
+		elif mode == "default":
+			os.system(command)
+
 def command_parser(command_to_parse):
+
 	if not command_to_parse == "":
-		if chk_cmd(command_to_parse, "hi"):
-			def callback():
-				print("Hello World!")
-			callback()
-		main(False, False)
+	
+		if chk_cmd(command_to_parse, "clear"):
+			os_exec("clear", "ps")
+
+		elif chk_cmd(command_to_parse, "exit"):
+			os_exec("exit", "default")
+			os_exec("clear", "ps")
+
+		if not chk_cmd(command_to_parse, "exit"):
+			main(False, False)
 
 
 # -----------------<  General functions  >----------------- #
