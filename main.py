@@ -61,7 +61,7 @@ def chk_cmd(cmdio, cmd):
 
 def get_repo_desc():
 	repo_desc = f"""
-	{BOLD}{YELLOW}# PyVern{END}
+	{BOLD}{YELLOW}# QyVern - PY{END}
 
 	A Shell Interface & and fork of {ITALIC}{CYAN}@Equinoxtic{END}'s QyVern.
 
@@ -82,7 +82,11 @@ def get_repo_desc():
 def parse_cmd(cmd_io):
 	if not cmd_io == "":
 
-		command_list = [init_commands()]
+		command_list = []
+
+		add_command("exit", command_list)
+		add_command("clear", command_list)
+		add_command("get-repo", command_list)
 
 		parse = False
 
@@ -115,7 +119,7 @@ def command_parser(command_to_parse):
 			os_exec("clear", "ps")
 
 		elif chk_cmd(command_to_parse, "get-repo"):
-			print(f"\n{get_repo_desc()}")
+			print(f"{get_repo_desc()}", end="")
 
 		if not chk_cmd(command_to_parse, "exit"):
 			main(False, False)
@@ -130,21 +134,12 @@ def add_command(command_name, table_append=None):
 		table_append.append(command_name)
 		return table_append
 
-def init_commands(): # Add custom commands here.
-	command_list = []
-
-	add_command("exit", command_list)
-	add_command("clear", command_list)
-	add_command("get-repo", command_list)
-
-	return command_list
-
 def get_file(file):
 	if not file == "":
 		return file
 
 def generate_credits():
-	cred = f"\nBy - {get_credits()} - Version: {get_version()}"
+	cred = f"\n{CYAN}By: {get_credits()} - Version: {get_version()}{END}"
 	print(cred)
 
 def generate_title():
@@ -154,7 +149,7 @@ def generate_title():
 └─┘└ ┴  └┘ └─┘┴└─┘└┘
 	{END}"""
 	print(title, end="")
-	print(f"\n{create_bar('-', 75)}")
+	print(f"\n{create_bar('-', 65)}")
 
 def init(gen_title, gen_creds):
 	if gen_title == True:
