@@ -1,10 +1,6 @@
 import argparse
 from os import system, path
 from random import randint
-import subprocess
-import os
-import argparse
-
 
 # -----------------<  Text Utilities  >----------------- #
 
@@ -103,9 +99,9 @@ def parse_cmd(cmd_io):
 def os_exec(command, mode):
 	if not command == "":
 		if mode == "ps":
-			os.system(f"powershell -command {command}")
+			system(f"powershell -command {command}")
 		elif mode == "default":
-			os.system(command)
+			system(command)
 
 def command_parser(command_to_parse):
 
@@ -125,7 +121,7 @@ def command_parser(command_to_parse):
 			main(False, False)
 
 
-# -----------------<  General functions  >----------------- #
+# -----------------<  General functions  >---------	-------- #
 
 def add_command(command_name, table_append=None):
 	if not command_name == "":
