@@ -57,6 +57,10 @@ def chk_cmd(cmdio, cmd):
 		if cmdio == cmd:
 			return True
 
+def get_repo():
+	repo_file = open(get_file("client_env/repo_desc.txt"))
+	return repo_file.read()
+
 # -----------------<  Parser functions  >----------------- #
 
 def parse_cmd(cmd_io):
@@ -64,7 +68,8 @@ def parse_cmd(cmd_io):
 
 		command_list = [
 			"exit",
-			"clear"
+			"clear",
+			"get-repo"
 		]
 
 		parse = False
@@ -96,6 +101,9 @@ def command_parser(command_to_parse):
 		elif chk_cmd(command_to_parse, "exit"):
 			os_exec("exit", "default")
 			os_exec("clear", "ps")
+
+		elif chk_cmd(command_to_parse, "get-repo"):
+			print("\n" + get_repo())
 
 		if not chk_cmd(command_to_parse, "exit"):
 			main(False, False)
