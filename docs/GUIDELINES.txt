@@ -1,11 +1,11 @@
-Guidelines when modifying QyVern:
+Guidelines when modifying PyVern:
 
-* NEVER distribute illegal / malicious copies of QyVern.
+* NEVER distribute illegal / malicious copies of PyVern.
 	- It is illegal to make such stuff like that.
 	- I will take action once a copy is reported to me.
 	- This also applies to modules.
 
-* DO NOT use QyVern and custom scripts as a weapon for threat.
+* DO NOT use PyVern and custom scripts as a weapon for threat.
 	- Threatening to hack in a false manner can be 
 	  enough to scare everyone, and it'd even cause 
 	  you to get in legal trouble.
