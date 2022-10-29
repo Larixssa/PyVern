@@ -73,6 +73,7 @@ def load_state(wait_time_a, wait_time_b):
 	add_fake_loading_path("display.get_version", loading_files)
 	add_fake_loading_path("display.get_credits", loading_files)
 	add_fake_loading_path("display.get_cursor", loading_files)
+	add_fake_loading_path("states.loading", loading_file)
 	add_fake_loading_path("logging.console_display", loading_files)
 	add_fake_loading_path("logging.logging_std", loading_files)
 	add_fake_loading_path("misc.newline", loading_files)
