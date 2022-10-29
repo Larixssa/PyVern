@@ -3,6 +3,7 @@ from os import system, path
 from random import randint
 from termcolor import cprint
 from pyfiglet import figlet_format
+import argparse
 
 
 # -----------------<  Text Utilities  >----------------- #
@@ -49,11 +50,35 @@ def create_bar(bar_str, bar_length):
 	if not bar_str == "" and bar_length > 0:
 		return bar_str * bar_length
 
+# -----------------<  Parser functions  >----------------- #
+
+def parse_cmd(cmd_io):
+	if not cmd_io == "":
+		command_parser(cmd_io)
+
+def chk_cmd(cmdio, cmd):
+	if not cmdio == "" and not cmd == "":
+		if cmdio == cmd:
+			return True
+
+def command_parser(command_to_parse):
+	if not command_to_parse == "":
+		if chk_cmd(command_to_parse, "hi"):
+			def callback():
+				print("Hello World!")
+			callback()
+		main(False, False)
+
+
 # -----------------<  General functions  >----------------- #
 
 def get_file(file):
 	if not file == "":
 		return file
+
+def generate_credits():
+	cred = "\nBy - " + get_credits() + " - Version: " + get_version()
+	print(cred)
 
 def generate_title():
 	title = f"""{PURPLE}{BOLD}
@@ -63,15 +88,20 @@ def generate_title():
 	{END}"""
 	print(title, end="")
 	print("\n" + create_bar("=", 75))
-	cred = "\nBy - " + get_credits() + " - Version: " + get_version()
-	print(cred)
+
+def init(gen_title, gen_creds):
+	if gen_title == True:
+		generate_title()
+	if gen_creds == True:
+		generate_credits()
 	print("\n" + get_cursor("cursor"), end="")
 	prompt = input()
+	parse_cmd(prompt)
 
 # -----------------<  Main function  >----------------- #
 
-def main():
-	generate_title()
+def main(__title, __creds):
+	init(__title, __creds)
 	
 if __name__ == '__main__':
-	main()
+	main(True, True)
