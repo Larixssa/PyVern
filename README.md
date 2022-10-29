@@ -1,4 +1,4 @@
-# PyVern
+# QyVern-PY
 
 A Shell Interface & and fork of @Equinoxtic's QyVern.
 
