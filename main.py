@@ -14,7 +14,10 @@ PURPLE = "\033[0;35m"
 LIGHT_PURPLE = "\033[1;35m"
 LIGHT_WHITE = "\033[1;37m"
 DARK_GRAY = "\033[1;30m"
+LIGHT_GREEN = "\033[1;32m"
 LIGHT_GRAY = "\033[0;37m"
+BLUE = "\033[0;34m"
+LIGHT_BLUE = "\033[1;34m"
 
 # Styles
 BOLD = "\033[1m"
@@ -52,9 +55,9 @@ def init(gen_title, gen_creds):
 		generate_title()
 	if gen_creds == True:
 		generate_credits()
-	print(f"\n{get_cursor('cursor')}", end="")
+	print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
-	parse_cmd(prompt)
+	parse_cmd(prompt.lower())
 
 # -----------------<  Display functions  >----------------- #
 
@@ -76,6 +79,9 @@ def create_bar(bar_str, bar_length):
 		return bar_str * bar_length
 
 # -----------------<  Custom functions  >----------------- #
+
+def newline():
+	print("\n", end="")
 
 def chk_cmd(cmdio, cmd):
 	if not cmdio == "" and not cmd == "":
@@ -100,6 +106,20 @@ def get_repo_desc():
 	"""
 	return repo_desc
 
+def get_help():
+	command_list = []
+
+	create_command("exit", "Exit out of the client.", command_list)
+	create_command("clear", "Clear the screen.", command_list)
+	create_command("get-repo", "Get the repository's info & link.", command_list)
+	create_command("help", "Shows a list of commands and their usage.", command_list)
+
+	print(f"\n{GREEN}-------< Available Commands >-------{END}")
+
+	for i in range(0, len(command_list)):
+		print(f"\n{command_list[i]}", end="")
+	newline()
+
 # -----------------<  Parser functions  >----------------- #
 
 def parse_cmd(cmd_io):
@@ -110,17 +130,18 @@ def parse_cmd(cmd_io):
 		add_command("exit", command_list)
 		add_command("clear", command_list)
 		add_command("get-repo", command_list)
+		add_command("help", command_list)
 
 		parse = False
 
 		for i in range(0, len(command_list)):
-			if cmd_io ==  command_list[i]:
+			if cmd_io == command_list[i]:
 				parse = True
 		
 		if parse == True:
 			command_parser(cmd_io)
 		else:
-			print(f"{RED}\n[ERROR] - Unavailable command: {cmd_io}{END}")
+			print(f"{RED}\n[ERROR] - Unavailable command: {YELLOW}{cmd_io}{END}")
 			main(False, False)
 
 def os_exec(command, mode):
@@ -137,12 +158,15 @@ def command_parser(command_to_parse):
 		if chk_cmd(command_to_parse, "clear"):
 			os_exec("clear", "ps")
 
-		elif chk_cmd(command_to_parse, "exit"):
+		if chk_cmd(command_to_parse, "exit"):
 			os_exec("exit", "default")
 			os_exec("clear", "ps")
 
-		elif chk_cmd(command_to_parse, "get-repo"):
+		if chk_cmd(command_to_parse, "get-repo"):
 			print(f"{get_repo_desc()}", end="")
+
+		if chk_cmd(command_to_parse, "help"):
+			get_help()
 
 		if not chk_cmd(command_to_parse, "exit"):
 			main(False, False)
@@ -154,6 +178,14 @@ def add_command(command_name, table_append=None):
 		if table_append is None:
 			table_append = []
 		table_append.append(command_name)
+		return table_append
+
+def create_command(command_name, description, table_append=None):
+	if not command_name == "" and not description == "":
+		full_command = f"{BLUE}[{command_name}]{END} : {CYAN}{description}{END}"
+		if table_append is None:
+			table_append = []
+		table_append.append(f"{full_command}")
 		return table_append
 
 # -----------------<  Main function  >----------------- #
