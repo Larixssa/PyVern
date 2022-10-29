@@ -1,4 +1,3 @@
-import argparse
 from os import system, path
 from random import randint
 
