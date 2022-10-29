@@ -1,6 +1,0 @@
-{
-	"Lua.completion.autoRequire": false,
-	"editor.insertSpaces": false,
-	"editor.minimap.enabled": false,
-	"Lua.runtime.version": "LuaJIT"
-}
