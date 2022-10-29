@@ -1,5 +1,7 @@
 from os import system, path
 from random import randint
+import time
+import datetime
 
 # -----------------<  Text Utilities  >----------------- #
 
@@ -50,7 +52,9 @@ def generate_title():
 	print(title, end="")
 	print(f"\n{create_bar('-', 65)}")
 
-def init(gen_title, gen_creds):
+def init(gen_title, gen_creds, clear_screen):
+	if clear_screen == True:
+		os_exec("clear", "ps")
 	if gen_title == True:
 		generate_title()
 	if gen_creds == True:
@@ -58,6 +62,33 @@ def init(gen_title, gen_creds):
 	print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
 	parse_cmd(prompt.lower())
+
+def load_state(wait_time_a, wait_time_b):
+	loading_files = []
+	os_exec("mkdir logs", "ps")
+	os_exec("ni logs/logfile.txt", "ps")
+	os_exec("clear", "ps")
+	print(f"{BLUE}[ Compiling QyVern - {get_version()}]{END}")
+	add_fake_loading_path("display.create_bar", loading_files)
+	add_fake_loading_path("display.get_version", loading_files)
+	add_fake_loading_path("display.get_credits", loading_files)
+	add_fake_loading_path("display.get_cursor", loading_files)
+	add_fake_loading_path("logging.console_display", loading_files)
+	add_fake_loading_path("logging.logging_std", loading_files)
+	add_fake_loading_path("misc.newline", loading_files)
+	add_fake_loading_path("misc.chk_cmd", loading_files)
+	add_fake_loading_path("misc.repo_desc", loading_files)
+	add_fake_loading_path("misc.get_help", loading_files)
+	add_fake_loading_path("misc.get_time", loading_files)
+	add_fake_loading_path("parser.cmd_parse", loading_files)
+	add_fake_loading_path("parser.os_exec", loading_files)
+	add_fake_loading_path("parser.command_parser", loading_files)
+	for i in range(0, len(loading_files)):
+		console_display(f"Compiling {loading_files[i]}...")
+		logging(get_file("logs/logfile.txt"), f"Compiling file > {loading_files[i]}")
+		wait(randint(wait_time_a, wait_time_b))
+	logging(get_file("logs/logfile.txt"), "Successfully loaded in!")
+	init(True, True, True)
 
 # -----------------<  Display functions  >----------------- #
 
@@ -78,6 +109,19 @@ def create_bar(bar_str, bar_length):
 	if not bar_str == "" and bar_length > 0:
 		return bar_str * bar_length
 
+def console_display(message):
+	if not message == "":
+		print(f"\n{YELLOW}[Console]{END} {GREEN}{get_time()}{END} : {CYAN}{message}{END}", end="")
+
+def logging(file, message):
+	if not message == "" and not file == "":
+		with open(get_file(file), "a") as f:
+			f.writelines(f"[Console] {get_time()} : {message}\n")
+
+def wait(n):
+	if n > 0:
+		time.sleep(n)
+
 # -----------------<  Custom functions  >----------------- #
 
 def newline():
@@ -89,6 +133,7 @@ def chk_cmd(cmdio, cmd):
 			return True
 
 def get_repo_desc():
+	logging(get_file("logs/logfile.txt"), "Getting repository info & link...")
 	repo_desc = f"""
 	{BOLD}{YELLOW}# QyVern - PY{END}
 
@@ -107,6 +152,8 @@ def get_repo_desc():
 	return repo_desc
 
 def get_help():
+	logging(get_file("logs/logfile.txt"), "Getting commands...")
+
 	command_list = []
 
 	create_command("exit", "Exit out of the client.", command_list)
@@ -119,6 +166,18 @@ def get_help():
 	for i in range(0, len(command_list)):
 		print(f"\n{command_list[i]}", end="")
 	newline()
+
+def get_time():
+	time_now = datetime.datetime.now()
+	return time_now.strftime("%H:%M:%S")
+
+def add_fake_loading_path(_fpath, _ttable=None):
+	if not _fpath == "":
+		file_path = _fpath.replace(".", "/")
+		if _ttable is None:
+			_ttable = []
+		_ttable.append(file_path)
+		return _ttable
 
 # -----------------<  Parser functions  >----------------- #
 
@@ -142,7 +201,7 @@ def parse_cmd(cmd_io):
 			command_parser(cmd_io)
 		else:
 			print(f"{RED}\n[ERROR] - Unavailable command: {YELLOW}{cmd_io}{END}")
-			main(False, False)
+			init(False, False, False)
 
 def os_exec(command, mode):
 	if not command == "":
@@ -152,6 +211,8 @@ def os_exec(command, mode):
 			system(command)
 
 def command_parser(command_to_parse):
+
+	logging(get_file("logs/logfile.txt"), f"Ran command > {command_to_parse}")
 
 	if not command_to_parse == "":
 	
@@ -169,7 +230,7 @@ def command_parser(command_to_parse):
 			get_help()
 
 		if not chk_cmd(command_to_parse, "exit"):
-			main(False, False)
+			init(False, False, False)
 
 # -----------------<  Command functions  >----------------- #
 
@@ -190,8 +251,8 @@ def create_command(command_name, description, table_append=None):
 
 # -----------------<  Main function  >----------------- #
 
-def main(__title, __creds):
-	init(__title, __creds)
+def main():
+	load_state(1, 2)
 	
 if __name__ == '__main__':
-	main(True, True)
+	main()
