@@ -82,11 +82,7 @@ def get_repo_desc():
 def parse_cmd(cmd_io):
 	if not cmd_io == "":
 
-		command_list = [ # Add custom commands here.
-			"exit",
-			"clear",
-			"get-repo"
-		]
+		command_list = [init_commands()]
 
 		parse = False
 
@@ -126,6 +122,22 @@ def command_parser(command_to_parse):
 
 
 # -----------------<  General functions  >----------------- #
+
+def add_command(command_name, table_append=None):
+	if not command_name == "":
+		if table_append is None:
+			table_append = []
+		table_append.append(command_name)
+		return table_append
+
+def init_commands(): # Add custom commands here.
+	command_list = []
+
+	add_command("exit", command_list)
+	add_command("clear", command_list)
+	add_command("get-repo", command_list)
+
+	return command_list
 
 def get_file(file):
 	if not file == "":
