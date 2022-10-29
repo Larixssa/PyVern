@@ -1,8 +1,6 @@
 import argparse
 from os import system, path
 from random import randint
-from termcolor import cprint
-from pyfiglet import figlet_format
 import subprocess
 import os
 import argparse
