@@ -29,6 +29,34 @@ WARN = f"{ORANGE}WARNING{END}"
 ERROR = f"{RED}ERROR{END}"
 SUCCESS = f"{GREEN}SUCCESS{END}"
 
+# -----------------<  General functions  >------------------ #
+
+def get_file(file):
+	if not file == "":
+		return file
+
+def generate_credits():
+	cred = f"\n{CYAN}By: {get_credits()} - Version: {get_version()}{END}"
+	print(cred)
+
+def generate_title():
+	title = f"""{PURPLE}{BOLD}
+┌─┐ ┬ ┬┬  ┬┌─┐┬─┐┌┐┌
+│─┼┐└┬┘└┐┌┘├┤ ├┬┘│││
+└─┘└ ┴  └┘ └─┘┴└─┘└┘
+	{END}"""
+	print(title, end="")
+	print(f"\n{create_bar('-', 65)}")
+
+def init(gen_title, gen_creds):
+	if gen_title == True:
+		generate_title()
+	if gen_creds == True:
+		generate_credits()
+	print(f"\n{get_cursor('cursor')}", end="")
+	prompt = input()
+	parse_cmd(prompt)
+
 # -----------------<  Display functions  >----------------- #
 
 def get_credits():
@@ -120,8 +148,7 @@ def command_parser(command_to_parse):
 		if not chk_cmd(command_to_parse, "exit"):
 			main(False, False)
 
-
-# -----------------<  General functions  >---------	-------- #
+# -----------------<  Command functions  >----------------- #
 
 def add_command(command_name, table_append=None):
 	if not command_name == "":
@@ -129,32 +156,6 @@ def add_command(command_name, table_append=None):
 			table_append = []
 		table_append.append(command_name)
 		return table_append
-
-def get_file(file):
-	if not file == "":
-		return file
-
-def generate_credits():
-	cred = f"\n{CYAN}By: {get_credits()} - Version: {get_version()}{END}"
-	print(cred)
-
-def generate_title():
-	title = f"""{PURPLE}{BOLD}
-┌─┐ ┬ ┬┬  ┬┌─┐┬─┐┌┐┌
-│─┼┐└┬┘└┐┌┘├┤ ├┬┘│││
-└─┘└ ┴  └┘ └─┘┴└─┘└┘
-	{END}"""
-	print(title, end="")
-	print(f"\n{create_bar('-', 65)}")
-
-def init(gen_title, gen_creds):
-	if gen_title == True:
-		generate_title()
-	if gen_creds == True:
-		generate_credits()
-	print(f"\n{get_cursor('cursor')}", end="")
-	prompt = input()
-	parse_cmd(prompt)
 
 # -----------------<  Main function  >----------------- #
 
