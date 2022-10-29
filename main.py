@@ -32,13 +32,25 @@ SUCCESS = f"{GREEN}SUCCESS{END}"
 
 # -----------------<  General functions  >----------------- #
 
+def get_file(file):
+	if not file == "":
+		return file
+
+def get_credits():
+	creds_f = open(get_file("client_env/credits.txt"), "r")
+	return creds_f.read()
+
+def get_version():
+	version_f = open(get_file("client_env/version.txt"), "r")
+	return version_f.read()
+
 def generate_title():
 	title = f"""{PURPLE}{BOLD}
 ┌─┐ ┬ ┬┬  ┬┌─┐┬─┐┌┐┌
 │─┼┐└┬┘└┐┌┘├┤ ├┬┘│││
 └─┘└ ┴  └┘ └─┘┴└─┘└┘
 	{END}"""
-	cred = "By - Larixssa (Lar_issa)\nVersion: 0.0.1"
+	cred = "By - " + get_credits() + "\nVersion: " + get_version()
 	print(title + "\n" + cred)
 
 # -----------------<  Main function  >----------------- #
