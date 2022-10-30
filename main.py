@@ -9,6 +9,7 @@ import datetime
 
 
 
+
 # -----------------<  Text Utilities  >----------------- #
 
 # Text Colors
@@ -236,6 +237,7 @@ def read_file(_file):
 
 
 
+
 # -----------------<  Parser functions  >----------------- #
 
 def parse_cmd(cmd_io):
@@ -295,6 +297,7 @@ def command_parser(command_to_parse):
 
 
 
+
 # -----------------<  Command functions  >----------------- #
 
 def add_command(command_name, table_append=None):
@@ -311,6 +314,7 @@ def create_command(command_name, description, table_append=None):
 			table_append = []
 		table_append.append(f"{full_command}")
 		return table_append
+
 
 
 
