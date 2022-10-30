@@ -3,6 +3,12 @@ from random import randint
 import time
 import datetime
 
+
+
+
+
+
+
 # -----------------<  Text Utilities  >----------------- #
 
 # Text Colors
@@ -33,6 +39,13 @@ WARN = f"{ORANGE}WARNING{END}"
 ERROR = f"{RED}ERROR{END}"
 SUCCESS = f"{GREEN}SUCCESS{END}"
 
+
+
+
+
+
+
+
 # -----------------<  General functions  >------------------ #
 
 def get_file(file):
@@ -52,44 +65,58 @@ def generate_title():
 	print(title, end="")
 	print(f"\n{create_bar('-', 65)}")
 
-def init(gen_title, gen_creds, clear_screen):
+def init(gen_title, gen_creds, clear_screen, gen_get_started):
 	if clear_screen == True:
 		os_exec("clear", "ps")
 	if gen_title == True:
 		generate_title()
 	if gen_creds == True:
 		generate_credits()
+	if gen_get_started == True:
+		get_started()
 	print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
 	parse_cmd(prompt.lower())
 
-def load_state(wait_time_a, wait_time_b):
-	loading_files = []
+def init_log_files():
 	os_exec("mkdir logs", "ps")
 	os_exec("ni logs/logfile.txt", "ps")
-	os_exec("clear", "ps")
-	print(f"{BLUE}[ Compiling QyVern - {get_version()}]{END}")
-	add_fake_loading_path("display.create_bar", loading_files)
-	add_fake_loading_path("display.get_version", loading_files)
-	add_fake_loading_path("display.get_credits", loading_files)
-	add_fake_loading_path("display.get_cursor", loading_files)
-	add_fake_loading_path("states.loading", loading_files)
-	add_fake_loading_path("logging.console_display", loading_files)
-	add_fake_loading_path("logging.logging_std", loading_files)
-	add_fake_loading_path("misc.newline", loading_files)
-	add_fake_loading_path("misc.chk_cmd", loading_files)
-	add_fake_loading_path("misc.repo_desc", loading_files)
-	add_fake_loading_path("misc.get_help", loading_files)
-	add_fake_loading_path("misc.get_time", loading_files)
-	add_fake_loading_path("parser.cmd_parse", loading_files)
-	add_fake_loading_path("parser.os_exec", loading_files)
-	add_fake_loading_path("parser.command_parser", loading_files)
-	for i in range(0, len(loading_files)):
-		console_display(f"Compiling {loading_files[i]}...")
-		logging(get_file("logs/logfile.txt"), f"Compiling file > {loading_files[i]}")
-		wait(randint(wait_time_a, wait_time_b))
+
+def load_state(wait_time_a, wait_time_b, _compile):
+	loading_files = []
+	if _compile == True:
+		init_log_files()
+		os_exec("clear", "ps")
+		print(f"{BLUE}[ Compiling QyVern - {get_version()}]{END}")
+		add_fake_loading_path("display.create_bar", loading_files)
+		add_fake_loading_path("display.get_version", loading_files)
+		add_fake_loading_path("display.get_credits", loading_files)
+		add_fake_loading_path("display.get_cursor", loading_files)
+		add_fake_loading_path("states.loading", loading_files)
+		add_fake_loading_path("logging.console_display", loading_files)
+		add_fake_loading_path("logging.logging_std", loading_files)
+		add_fake_loading_path("misc.newline", loading_files)
+		add_fake_loading_path("misc.chk_cmd", loading_files)
+		add_fake_loading_path("misc.repo_desc", loading_files)
+		add_fake_loading_path("misc.get_help", loading_files)
+		add_fake_loading_path("misc.get_time", loading_files)
+		add_fake_loading_path("parser.cmd_parse", loading_files)
+		add_fake_loading_path("parser.os_exec", loading_files)
+		add_fake_loading_path("parser.command_parser", loading_files)
+		for i in range(0, len(loading_files)):
+			console_display(f"Compiling {loading_files[i]}...")
+			logging(get_file("logs/logfile.txt"), f"Compiling file > {loading_files[i]}")
+			wait(randint(wait_time_a, wait_time_b))
+		write_to_file("config/set_compile.txt", "False", "w")
 	logging(get_file("logs/logfile.txt"), "Successfully loaded in!")
-	init(True, True, True)
+	init(True, True, True, True)
+
+
+
+
+
+
+
 
 # -----------------<  Display functions  >----------------- #
 
@@ -100,6 +127,10 @@ def get_credits():
 def get_version():
 	version_f = open(get_file("client_env/version.txt"), "r")
 	return version_f.read()
+
+def get_console_version():
+	c_version_f = read_file("client_env/console_version.txt")
+	return c_version_f
 
 def get_cursor(cursor_file):
 	if not cursor_file == "":
@@ -114,14 +145,24 @@ def console_display(message):
 	if not message == "":
 		print(f"\n{YELLOW}[Console]{END} {GREEN}{get_time()}{END} : {CYAN}{message}{END}", end="")
 
-def logging(file, message):
-	if not message == "" and not file == "":
-		with open(get_file(file), "a") as f:
+def logging(_file, message):
+	if not message == "" and not _file == "":
+		with open(get_file(_file), "a") as f:
 			f.writelines(f"[Console] {get_time()} : {message}\n")
+
+def get_started():
+	print(f"\n{CYAN}: Type \"help\" to get started.{END}")
 
 def wait(n):
 	if n > 0:
 		time.sleep(n)
+
+
+
+
+
+
+
 
 # -----------------<  Custom functions  >----------------- #
 
@@ -180,6 +221,21 @@ def add_fake_loading_path(_fpath, _ttable=None):
 		_ttable.append(file_path)
 		return _ttable
 
+def write_to_file(_file, content, mode):
+	if not _file is None or not _file == "":
+		with open(get_file(_file), mode) as f:
+			f.write(content)
+
+def read_file(_file):
+	rfile = open(get_file(_file), "r")
+	return rfile.read()
+
+
+
+
+
+
+
 # -----------------<  Parser functions  >----------------- #
 
 def parse_cmd(cmd_io):
@@ -202,7 +258,7 @@ def parse_cmd(cmd_io):
 			command_parser(cmd_io)
 		else:
 			print(f"{RED}\n[ERROR] - Unavailable command: {YELLOW}{cmd_io}{END}")
-			init(False, False, False)
+			init(False, False, False, False)
 
 def os_exec(command, mode):
 	if not command == "":
@@ -231,7 +287,13 @@ def command_parser(command_to_parse):
 			get_help()
 
 		if not chk_cmd(command_to_parse, "exit"):
-			init(False, False, False)
+			init(False, False, False, False)
+
+
+
+
+
+
 
 # -----------------<  Command functions  >----------------- #
 
@@ -250,10 +312,25 @@ def create_command(command_name, description, table_append=None):
 		table_append.append(f"{full_command}")
 		return table_append
 
+
+
+
+
+
+
 # -----------------<  Main function  >----------------- #
 
 def main():
-	load_state(1, 2)
+	set_compile = read_file("config/set_compile.txt")
+	set_get_started = read_file("config/set_get_started.txt")
+	def_val = True
+	if set_compile == "True":
+		load_state(1, 2, True)
+	else:
+		if set_get_started == "False":
+			init(def_val, def_val, def_val, False)
+		else:
+			init(def_val, def_val, def_val, True)
 	
 if __name__ == '__main__':
 	main()
