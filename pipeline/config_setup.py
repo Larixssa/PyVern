@@ -1,4 +1,4 @@
-from os import system
+from os import system, path
 
 def get_file(file):
 	if not file == "":
@@ -18,14 +18,18 @@ def write_to_file(_file, content, mode):
 
 def start_setup():
 	default_config_path = "config"
-	os_exec("mkdir config", "ps")
-	os_exec("ni config/set_compile.txt", "ps")
-	os_exec("ni config/set_get_started.txt", "ps")
-	os_exec("ni config/cursor.txt", "ps")
-	write_to_file(f"{default_config_path}/set_compile.txt", "True", "w")
-	write_to_file(f"{default_config_path}/set_get_started.txt", "True", "w")
-	write_to_file(f"{default_config_path}/cursor.txt", "$", "w")
 	os_exec("clear", "ps")
-	print("Finished setting up.")
+	if not path.exists(f"{default_config_path}/"):
+		os_exec("mkdir config", "ps")
+		os_exec("ni config/set_compile.txt", "ps")
+		os_exec("ni config/set_get_started.txt", "ps")
+		os_exec("ni config/cursor.txt", "ps")
+		write_to_file(f"{default_config_path}/set_compile.txt", "True", "w")
+		write_to_file(f"{default_config_path}/set_get_started.txt", "True", "w")
+		write_to_file(f"{default_config_path}/cursor.txt", "$", "w")
+		os_exec("clear", "ps")
+		print("Finished setting up.")
+	else:
+		print("Configuration folder is already set up.")
 
 start_setup()
