@@ -1,15 +1,22 @@
-from os import system, path
+import os
+from os import path
+from platform import system
 
 def get_file(file):
 	if not file == "":
 		return file
 
 def os_exec(command, mode):
+	sys_name = system()
 	if not command == "":
-		if mode == "ps":
-			system(f"powershell -command {command}")
-		elif mode == "default":
-			system(command)
+		if sys_name == "Windows":
+			if mode == "ps":
+				os.system(f"powershell -command {command}")
+			elif mode == "default":
+				os.system(command)
+		elif sys_name == "Linux":
+			if mode == "default":
+				os.system(command)
 
 def write_to_file(_file, content, mode):
 	if not _file is None or not _file == "":
@@ -21,13 +28,21 @@ def start_setup():
 	os_exec("clear", "ps")
 	if not path.exists(f"{default_config_path}/"):
 		os_exec("mkdir config", "ps")
-		os_exec("ni config/set_compile.txt", "ps")
-		os_exec("ni config/set_get_started.txt", "ps")
-		os_exec("ni config/cursor.txt", "ps")
+		if system() == "Windows":
+			os_exec("ni config/set_compile.txt", "ps")
+			os_exec("ni config/set_get_started.txt", "ps")
+			os_exec("ni config/cursor.txt", "ps")
+		elif system() == "Linux":
+			os_exec("touch config/set_compile.txt", "default")
+			os_exec("touch config/set_get_started.txt", "default")
+			os_exec("touch config/cursor.txt", "default")
 		write_to_file(f"{default_config_path}/set_compile.txt", "True", "w")
 		write_to_file(f"{default_config_path}/set_get_started.txt", "True", "w")
 		write_to_file(f"{default_config_path}/cursor.txt", "$", "w")
-		os_exec("clear", "ps")
+		if system() == "Windows":
+			os_exec("clear", "ps")
+		elif system() == "Linux":
+			os_exec("clear", "default")
 		print("Finished setting up.")
 	else:
 		print("Configuration folder is already set up.")

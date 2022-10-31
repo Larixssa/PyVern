@@ -1,5 +1,6 @@
-from os import system, path
-from platform import python_version
+import os
+from os import path
+from platform import python_version, system
 from random import randint
 import time
 import datetime
@@ -89,8 +90,12 @@ def init(gen_title, gen_creds, clear_screen, gen_get_started):
 	parse_cmd(prompt.lower())
 
 def init_log_files():
-	os_exec("mkdir logs", "ps")
-	os_exec("ni logs/logfile.txt", "ps")
+	if system() == "Windows":
+		os_exec("mkdir logs", "ps")
+		os_exec("ni logs/logfile.txt", "ps")
+	elif system() == "Linux":
+		os_exec("mkdir logs", "default")
+		os_exec("touch logs/logfile.txt", "default")
 
 def load_state(wait_time_a, wait_time_b, _compile):
 	loading_files = []
@@ -265,11 +270,16 @@ def read_file(_file):
 	return rfile.read()
 
 def os_exec(command, mode):
+	sys_name = system()
 	if not command == "":
-		if mode == "ps":
-			system(f"powershell -command {command}")
-		elif mode == "default":
-			system(command)
+		if sys_name == "Windows":
+			if mode == "ps":
+				os.system(f"powershell -command {command}")
+			elif mode == "default":
+				os.system(command)
+		elif sys_name == "Linux":
+			if mode == "default":
+				os.system(command)
 
 def logfile_clearer():
 	if path.exists("logs/logfile.txt"):
