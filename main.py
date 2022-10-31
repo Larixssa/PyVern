@@ -3,6 +3,7 @@ from platform import python_version
 from random import randint
 import time
 import datetime
+import webbrowser
 
 
 
@@ -234,6 +235,7 @@ def get_help():
 	create_command("get-version / get-client-version", "Get the version of the client.", command_list)
 	create_command("get-console-version", "Get the version of the command line console.", command_list)
 	create_command("get-python-version / get-py-version", "Get the version of the python programming language", command_list)
+	create_command("open-link", "Open a certain link within the console.", command_list)
 
 	print(f"\n{GREEN}-------< Available Commands >-------{END}")
 
@@ -275,6 +277,72 @@ def logfile_clearer():
 	else:
 		print(f"\n{RED}[ERROR]: Cannot be cleared. Logfile is either missing or corrupted.{END}")
 
+def process_out(stdprocess):
+	if not stdprocess == "":
+		if stdprocess == "cancelled_operation":
+			return f"\n{RED}-- PROCESS CANCELLED --{END}"
+
+
+
+
+
+
+
+# -----------------<  GUI types  >----------------- #
+
+def open_link_gui():
+	https_prot = "https://"
+
+	def prompt():
+		guide = """
+\t\b\b\b\b\b\b-- GUIDE --
+\t\b\b\b\b\b\b* Input the link you want in the prompt.
+\t\b\b\b\b\b\b* Type in \"cancel\" or \"exit\" if you want to exit the process.
+		"""
+		print(f"\n[ Open Link GUI. ]\n{guide}")
+
+	def id_link(link_str):
+
+		link_prefixes = [
+			"youtube.com",
+			"discord.com",
+			"twitter.com",
+			"facebook.com",
+			"github.com"
+		]
+
+		link_names = ["YouTube", "Discord", "Twitter", "FaceBook", "GitHub"]
+
+		parse = False
+		_parse = None
+
+		for i in range(0, len(link_prefixes)):
+			
+			if not link_str.find(link_prefixes[i]) == -1:
+				parse = True
+				if _parse is None:
+					_parse = f"{link_names[i]} / {link_prefixes[i]}"
+		if parse:
+			print(f"\nOpened Link: {link_str}\nWebsite: {_parse}")
+		else:
+			print(f"\nOpened Link: {link_str}")
+		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_str} | Site: {_parse}")
+
+	prompt()
+
+	print("[URL]: ", end="")
+	clink = input()
+	if not clink == "":
+		if clink == "cancel" or clink == "exit":
+			print(f"{process_out('cancelled_operation')}")
+		else:
+			if clink.startswith(https_prot):
+				webbrowser.open_new_tab(f"{clink}")
+				id_link(clink)
+			else:
+				webbrowser.open_new_tab(f"{https_prot}{clink}")
+				id_link(clink)
+
 
 
 
@@ -299,6 +367,7 @@ def parse_cmd(cmd_io):
 		add_command("get-console-version", command_list)
 		add_command("get-python-version", command_list)
 		add_command("get-py-version", command_list)
+		add_command("open-link", command_list)
 
 		parse = False
 
@@ -350,6 +419,10 @@ def command_parser(command_to_parse):
 			write_to_file("logs/logfile.txt", "", "w")
 			logfile_clearer()
 
+		elif chk_cmd(command_to_parse, "open-link"):
+			open_link_gui()
+
+		# Prevents re-initialization.
 		if not chk_cmd(command_to_parse, "exit"):
 			init(False, False, False, False)
 
