@@ -69,12 +69,16 @@ def generate_title():
 def init(gen_title, gen_creds, clear_screen, gen_get_started):
 	if clear_screen == True:
 		os_exec("clear", "ps")
+
 	if gen_title == True:
 		generate_title()
+
 	if gen_creds == True:
 		generate_credits()
-	if gen_get_started == True:
+
+	if gen_get_started == True or gen_get_started == "True":
 		get_started()
+
 	print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
 	parse_cmd(prompt.lower())
@@ -88,7 +92,8 @@ def load_state(wait_time_a, wait_time_b, _compile):
 	if _compile == True:
 		init_log_files()
 		os_exec("clear", "ps")
-		print(f"{BLUE}[ Compiling QyVern - {get_version()}]{END}")
+		print(f"{BLUE}[ Compiling QyVern - {get_version()} ]{END}")
+
 		add_fake_loading_path("display.create_bar", loading_files)
 		add_fake_loading_path("display.get_version", loading_files)
 		add_fake_loading_path("display.get_credits", loading_files)
@@ -104,10 +109,12 @@ def load_state(wait_time_a, wait_time_b, _compile):
 		add_fake_loading_path("parser.cmd_parse", loading_files)
 		add_fake_loading_path("parser.os_exec", loading_files)
 		add_fake_loading_path("parser.command_parser", loading_files)
+
 		for i in range(0, len(loading_files)):
 			console_display(f"Compiling {loading_files[i]}...")
 			logging(get_file("logs/logfile.txt"), f"Compiling file > {loading_files[i]}")
 			wait(randint(wait_time_a, wait_time_b))
+
 		write_to_file("config/set_compile.txt", "False", "w")
 	logging(get_file("logs/logfile.txt"), "Successfully loaded in!")
 	init(True, True, True, True)
@@ -286,6 +293,7 @@ def command_parser(command_to_parse):
 			print(f"{get_repo_desc()}", end="")
 
 		if chk_cmd(command_to_parse, "help"):
+			write_to_file("config/set_get_started.txt", "False", "w")
 			get_help()
 
 		if not chk_cmd(command_to_parse, "exit"):
@@ -331,10 +339,7 @@ def main():
 	if set_compile == "True":
 		load_state(1, 2, True)
 	else:
-		if set_get_started == "False":
-			init(def_val, def_val, def_val, False)
-		else:
-			init(def_val, def_val, def_val, True)
+		init(def_val, def_val, def_val, set_get_started)
 	
 if __name__ == '__main__':
 	main()

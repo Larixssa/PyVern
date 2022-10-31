@@ -1,2 +1,2 @@
 cls
-python -u main.py
+python main.py

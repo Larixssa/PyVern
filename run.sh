@@ -1,3 +1,3 @@
 #!/bin/sh
 clear
-python -u main.py
+python main.py
