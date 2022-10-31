@@ -16,6 +16,6 @@ Using - ``Windows Terminal``
 
 -----
 
-*~ Requires Python (3.X).*
+*Requires Python (3.X).*
 
 *; Larixssa. <3*
