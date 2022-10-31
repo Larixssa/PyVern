@@ -1,4 +1,5 @@
 from os import system, path
+from platform import python_version
 from random import randint
 import time
 import datetime
@@ -145,6 +146,25 @@ def get_cursor(cursor_file):
 		cursor_str = open(get_file(f"config/{cursor_file}.txt"), "r")
 		return f"{cursor_str.read()} "
 
+def display_version_of(version_of):
+	if not version_of == "" or not version_of is None:
+
+		version_keyword = None
+
+		if version_of == "client" or version_of == "main":
+			print(f"\n{PURPLE}[Client Version]{END} : {get_version()}")
+			version_keyword = "Client"
+
+		elif version_of == "console" or version_of == "cl":
+			print(f"\n{BLUE}[Console Version]{END}\n{get_console_version()}")
+			version_keyword = "Console"
+
+		elif version_of == "python" or version_of == "py":
+			print(f"\n{LIGHT_GREEN}[Python Version]{END} : {python_version()}")
+			version_keyword = "Python"
+
+		logging(get_file("logs/logfile.txt"), f"Getting the version of {version_keyword}")
+
 def create_bar(bar_str, bar_length):
 	if not bar_str == "" and bar_length > 0:
 		return bar_str * bar_length
@@ -208,6 +228,9 @@ def get_help():
 	create_command("get-repo", "Get the repository's info & link.", command_list)
 	create_command("help", "Shows a list of commands and their usage.", command_list)
 	create_command("clear-log-file", "Clears the log file.", command_list)
+	create_command("get-version / get-client-version", "Get the version of the client.", command_list)
+	create_command("get-console-version", "Get the version of the command line console.", command_list)
+	create_command("get-python-version / get-py-version", "Get the version of the python programming language", command_list)
 
 	print(f"\n{GREEN}-------< Available Commands >-------{END}")
 
@@ -268,6 +291,11 @@ def parse_cmd(cmd_io):
 		add_command("get-repo", command_list)
 		add_command("help", command_list)
 		add_command("clear-log-file", command_list)
+		add_command("get-version", command_list)
+		add_command("get-client-version", command_list)
+		add_command("get-console-version", command_list)
+		add_command("get-python-version", command_list)
+		add_command("get-py-version", command_list)
 
 		parse = False
 
@@ -281,6 +309,9 @@ def parse_cmd(cmd_io):
 			print(f"{RED}\n[ERROR] - Unavailable command: {YELLOW}{cmd_io}{END}")
 			init(False, False, False, False)
 
+	else:
+		init(False, False, False, False)
+
 def command_parser(command_to_parse):
 
 	logging(get_file("logs/logfile.txt"), f"Ran command > {command_to_parse}")
@@ -292,35 +323,60 @@ def command_parser(command_to_parse):
 		if chk_cmd(command_to_parse, "clear"):
 			os_exec("clear", "ps")
 
-		if chk_cmd(command_to_parse, "exit"):
+		elif chk_cmd(command_to_parse, "exit"):
 			os_exec("exit", "default")
 			os_exec("clear", "ps")
 
-		if chk_cmd(command_to_parse, "get-repo"):
+		elif chk_cmd(command_to_parse, "get-repo"):
 			print(f"{get_repo_desc()}", end="")
 
-		if chk_cmd(command_to_parse, "help"):
+		elif chk_cmd(command_to_parse, "help"):
 			write_to_file("config/set_get_started.txt", "False", "w")
 			get_help()
 
-		if chk_cmd(command_to_parse, "clear-log-file"):
+		elif chk_cmd(command_to_parse, "get-version") or chk_cmd(command_to_parse, "get-client-version"):
+			display_version_of("client")
+
+		elif chk_cmd(command_to_parse, "get-console-version"):
+			display_version_of("console")
+
+		elif chk_cmd(command_to_parse, "get-python-version") or chk_cmd(command_to_parse, "get-py-version"):
+			display_version_of("python")
+
+		elif chk_cmd(command_to_parse, "clear-log-file"):
 			write_to_file("logs/logfile.txt", "", "w")
 			logfile_clearer()
 
 		if not chk_cmd(command_to_parse, "exit"):
 			init(False, False, False, False)
 
-def log_cmd(ccmd):
+def log_cmd(pcmd):
+
 	default_log_file = get_file("logs/logfile.txt")
-	if not ccmd == "":
-		if ccmd == "help":
+
+	if not pcmd == "":
+
+		if pcmd == "help":
 			logging(default_log_file, "Getting commands...")
-		elif ccmd == "exit":
+
+		elif pcmd == "exit":
 			logging(default_log_file, "Exiting out of the client...")
-		elif ccmd == "clear":
+
+		elif pcmd == "clear":
 			logging(default_log_file, "Screen cleared.")
-		elif ccmd == "get-repo":
+
+		elif pcmd == "get-repo":
 			logging(default_log_file, "Getting repository info & link...")
+
+		elif pcmd == "get-version" or pcmd == "get-client-version":
+			logging(default_log_file, "Showing client version.")
+
+		elif pcmd == "get-console-version":
+			logging(default_log_file, "Displaying console version. ~ Sweet Civil Co. <3")
+		
+		elif pcmd == "get-python-version" or pcmd == "get-py-version":
+			s = "s" * randint(5, 13)
+			logging(default_log_file, f"S{s}.")
 
 
 
