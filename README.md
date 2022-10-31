@@ -16,6 +16,16 @@ Using - ``Windows Terminal``
 
 -----
 
-*Requires Python (3.X)*
+## Additional Info
+
+This is only supported for Windows Operating Systems\
+BUT, that does not mean and intervention of making a\
+Linux compatible release.
+
+We will be releasing a Linux supported version of this\
+application. Time is undefined, but it will happen at\
+some point.
+
+*Requires Python (3.X).*
 
 *; Larixssa. <3*
