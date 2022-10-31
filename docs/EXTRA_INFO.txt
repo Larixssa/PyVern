@@ -1,0 +1,9 @@
+# Additional Info
+
+This is only supported for Windows Operating Systems
+BUT, that does not mean and interference of making a
+Linux compatible release.
+
+We will be releasing a Linux supported version of this
+application. Time is undefined, but it will happen at
+some point.
