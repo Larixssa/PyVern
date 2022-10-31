@@ -68,6 +68,9 @@ def generate_title():
 	print(f"\n{create_bar('-', 65)}")
 
 def init(gen_title, gen_creds, clear_screen, gen_get_started):
+
+	logging(get_file("logs/logfile.txt"), "Client Loaded.")
+
 	if clear_screen == True:
 		os_exec("clear", "ps")
 
@@ -179,7 +182,7 @@ def logging(_file, message):
 			f.writelines(f"[Console] {get_time()} : {message}\n")
 
 def get_started():
-	print(f"\n{CYAN}: Type \"help\" to get started.{END}")
+	print(f"\n{GREEN}: Type{END} {YELLOW}\"help\"{END} {GREEN}to get started.{END}")
 
 def wait(n):
 	if n > 0:
