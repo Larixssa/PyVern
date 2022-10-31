@@ -183,7 +183,6 @@ def chk_cmd(cmdio, cmd):
 			return True
 
 def get_repo_desc():
-	logging(get_file("logs/logfile.txt"), "Getting repository info & link...")
 	repo_desc = f"""
 	{BOLD}{YELLOW}# QyVern - PY{END}
 
@@ -202,14 +201,13 @@ def get_repo_desc():
 	return repo_desc
 
 def get_help():
-	logging(get_file("logs/logfile.txt"), "Getting commands...")
-
 	command_list = []
 
 	create_command("exit", "Exit out of the client.", command_list)
 	create_command("clear", "Clear the screen.", command_list)
 	create_command("get-repo", "Get the repository's info & link.", command_list)
 	create_command("help", "Shows a list of commands and their usage.", command_list)
+	create_command("clear-log-file", "Clears the log file.", command_list)
 
 	print(f"\n{GREEN}-------< Available Commands >-------{END}")
 
@@ -238,6 +236,19 @@ def read_file(_file):
 	rfile = open(get_file(_file), "r")
 	return rfile.read()
 
+def os_exec(command, mode):
+	if not command == "":
+		if mode == "ps":
+			system(f"powershell -command {command}")
+		elif mode == "default":
+			system(command)
+
+def logfile_clearer():
+	if path.exists("logs/logfile.txt"):
+		print(f"\n{GREEN}> Successfully cleared the logfile.{END}")
+	else:
+		print(f"\n{RED}[ERROR]: Cannot be cleared. Logfile is either missing or corrupted.{END}")
+
 
 
 
@@ -256,6 +267,7 @@ def parse_cmd(cmd_io):
 		add_command("clear", command_list)
 		add_command("get-repo", command_list)
 		add_command("help", command_list)
+		add_command("clear-log-file", command_list)
 
 		parse = False
 
@@ -269,18 +281,13 @@ def parse_cmd(cmd_io):
 			print(f"{RED}\n[ERROR] - Unavailable command: {YELLOW}{cmd_io}{END}")
 			init(False, False, False, False)
 
-def os_exec(command, mode):
-	if not command == "":
-		if mode == "ps":
-			system(f"powershell -command {command}")
-		elif mode == "default":
-			system(command)
-
 def command_parser(command_to_parse):
 
 	logging(get_file("logs/logfile.txt"), f"Ran command > {command_to_parse}")
 
 	if not command_to_parse == "":
+
+		log_cmd(command_to_parse)
 	
 		if chk_cmd(command_to_parse, "clear"):
 			os_exec("clear", "ps")
@@ -296,8 +303,24 @@ def command_parser(command_to_parse):
 			write_to_file("config/set_get_started.txt", "False", "w")
 			get_help()
 
+		if chk_cmd(command_to_parse, "clear-log-file"):
+			write_to_file("logs/logfile.txt", "", "w")
+			logfile_clearer()
+
 		if not chk_cmd(command_to_parse, "exit"):
 			init(False, False, False, False)
+
+def log_cmd(ccmd):
+	default_log_file = get_file("logs/logfile.txt")
+	if not ccmd == "":
+		if ccmd == "help":
+			logging(default_log_file, "Getting commands...")
+		elif ccmd == "exit":
+			logging(default_log_file, "Exiting out of the client...")
+		elif ccmd == "clear":
+			logging(default_log_file, "Screen cleared.")
+		elif ccmd == "get-repo":
+			logging(default_log_file, "Getting repository info & link...")
 
 
 
