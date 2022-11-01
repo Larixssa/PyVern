@@ -2,7 +2,7 @@ import os
 from os import path
 from platform import python_version, system
 from random import randint
-from re import search
+from re import search, findall
 import time
 import datetime
 import webbrowser
@@ -83,12 +83,11 @@ def generate_title():
 
 def init(gen_title, gen_creds, clear_screen, gen_get_started):
 
-	logging(get_file("logs/logfile.txt"), "Client Loaded.")
-
 	if clear_screen == True:
 		os_exec("clear", "ps")
 
 	if gen_title == True:
+		logging(get_file("logs/logfile.txt"), "Client Loaded.")
 		generate_title()
 
 	if gen_creds == True:
@@ -186,18 +185,35 @@ def display_version_of(version_of):
 		version_keyword = None
 
 		if version_of == "client" or version_of == "main":
-			print(f"\n{PURPLE}[Client Version]{END} : {get_version()}")
+			print(f"\n{PURPLE}[Client Version]{END} : {BLUE}{get_version()}{END}")
 			version_keyword = "Client"
 
 		elif version_of == "console" or version_of == "cl":
-			print(f"\n{BLUE}[Console Version]{END}\n{get_console_version()}")
+			print(f"\n{BLUE}[Console Version]{END}\n{CYAN}{get_console_version()}{END}")
 			version_keyword = "Console"
 
 		elif version_of == "python" or version_of == "py":
-			print(f"\n{LIGHT_GREEN}[Python Version]{END} : {python_version()}")
+			print(f"\n{LIGHT_GREEN}[Python Version]{END} : {YELLOW}{python_version()}{END}")
 			version_keyword = "Python"
 
 		logging(get_file("logs/logfile.txt"), f"Getting the version of {version_keyword}")
+
+def get_version_of(version_of):
+	if not version_of == "" or not version_of is None:
+
+		version_content = None
+
+		if version_content is None:
+			if version_of == "client" or version_of == "main":
+				version_content = f"\n{PURPLE}[Client Version]{END} : {CYAN}{get_version()}{END}"
+
+			elif version_of == "console" or version_of == "cl":
+				version_content = f"\n{PURPLE}[Console Version]{END}\n{CYAN}{get_console_version()}{END}"
+
+			elif version_of == "python" or version_of == "py":
+				version_content = f"\n{LIGHT_GREEN}[Python Version]{END} : {YELLOW}{python_version()}{END}"
+
+		return version_content
 
 def create_bar(bar_str, bar_length):
 	if not bar_str == "" and bar_length > 0:
@@ -231,11 +247,6 @@ def wait(n):
 def newline():
 	print("\n", end="")
 
-def chk_cmd(cmdio, cmd):
-	if not cmdio == "" and not cmd == "":
-		if cmdio == cmd:
-			return True
-
 """
 def search_flag(cmd, pcmd, cflag):
 	if not cmd == "" and not cflag == "":
@@ -261,6 +272,16 @@ def get_repo_desc():
 	{GREEN}Repository Link:{END} {CYAN}{ITALIC}https://github.com/Larixssa/QyVern-PY{END}
 	"""
 	return repo_desc
+
+def get_detailed_client_version():
+	client_version = f"""
+	{BLUE}\n[ QyVern - {get_version()} > Version Details. ]{END}
+	{get_version_of('client')}
+	{get_version_of('console')}
+	{BLUE}\n\n---- EXTRAS ----{END}
+	{get_version_of('python')}
+	"""
+	print(f"{client_version}")
 
 def get_time():
 	time_now = datetime.datetime.now()
@@ -307,6 +328,7 @@ def process_out(stdprocess):
 			return f"\n{RED}-- PROCESS CANCELLED --{END}"
 		elif stdprocess == "file_warning_exists":
 			return f"\n{RED}-- FILE DATA ERROR --{END}"
+
 
 
 
@@ -468,9 +490,7 @@ def get_commands_help():
 	create_command("get-repo", "Get the repository's info & link.", command_list)
 	create_command("help", "Shows a list of commands and their usage.", command_list)
 	create_command("clear-log-file", "Clears the log file.", command_list)
-	create_command("get-version / get-client-version", "Get the version of the client.", command_list)
-	create_command("get-console-version", "Get the version of the command line console.", command_list)
-	create_command("get-python-version / get-py-version", "Get the version of the python programming language", command_list)
+	create_command("version", "Get the version of the client, console, and python.", command_list)
 	create_command("open-link", "Open a certain link within the console.", command_list)
 	create_command("set-profile", "Configurate the Username and User ID.", command_list)
 
@@ -481,6 +501,7 @@ def get_commands_help():
 	newline()
 
 def parse_cmd(cmd_io):
+
 	if not cmd_io == "":
 
 		command_list = []
@@ -490,18 +511,14 @@ def parse_cmd(cmd_io):
 		add_command("get-repo", command_list)
 		add_command("help", command_list)
 		add_command("clear-log-file", command_list)
-		add_command("get-version", command_list)
-		add_command("get-client-version", command_list)
-		add_command("get-console-version", command_list)
-		add_command("get-python-version", command_list)
-		add_command("get-py-version", command_list)
+		add_command("version", command_list)
 		add_command("open-link", command_list)
 		add_command("set-profile", command_list)
 
 		parse = False
 
 		for i in range(0, len(command_list)):
-			if cmd_io.startswith(command_list[i]):
+			if cmd_io == command_list[i]:
 				parse = True
 		
 		if parse == True:
@@ -535,14 +552,15 @@ def command_parser(command_to_parse):
 			write_to_file("config/set_get_started.txt", "False", "w")
 			get_commands_help()
 
-		elif chk_cmd(command_to_parse, "get-version") or chk_cmd(command_to_parse, "get-client-version"):
-			display_version_of("client")
-
-		elif chk_cmd(command_to_parse, "get-console-version"):
-			display_version_of("console")
-
-		elif chk_cmd(command_to_parse, "get-python-version") or chk_cmd(command_to_parse, "get-py-version"):
-			display_version_of("python")
+		elif chk_cmd_startswith(command_to_parse, "version"):
+			if chk_flag("/client", command_to_parse, "client"):
+				display_version_of("client")
+			elif chk_flag("/console", command_to_parse, "console"):
+				display_version_of("console")
+			elif chk_flag("/python", command_to_parse, "python"):
+				display_version_of("python")
+			else:
+				get_detailed_client_version()
 
 		elif chk_cmd(command_to_parse, "clear-log-file"):
 			write_to_file("logs/logfile.txt", "", "w")
@@ -551,8 +569,13 @@ def command_parser(command_to_parse):
 		elif chk_cmd(command_to_parse, "open-link"):
 			open_link_gui()
 
-		elif chk_cmd(command_to_parse, "set-profile"):
-			set_profile()
+		elif chk_cmd_startswith(command_to_parse, "set-profile"):
+			if chk_flag("--set-username", command_to_parse, "set-username"):
+				set_username()
+			elif chk_flag("--set-userid", command_to_parse, "set-userid"):
+				set_userid()
+			else:
+				set_profile()
 
 		# Prevents re-initialization.
 		if not chk_cmd(command_to_parse, "exit"):
@@ -564,32 +587,31 @@ def log_cmd(pcmd):
 
 	if not pcmd == "":
 
-		if pcmd == "help":
+		if pcmd.startswith("help"):
 			logging(default_log_file, "Getting commands...")
 
-		elif pcmd == "exit":
+		elif pcmd.startswith("exit"):
 			logging(default_log_file, "Exiting out of the client...")
 
-		elif pcmd == "clear":
+		elif pcmd.startswith("clear"):
 			logging(default_log_file, "Screen cleared.")
 
-		elif pcmd == "get-repo":
+		elif pcmd.startswith("get-repo"):
 			logging(default_log_file, "Getting repository info & link...")
 
-		elif pcmd == "get-version" or pcmd == "get-client-version":
-			logging(default_log_file, "Showing client version.")
+		if pcmd.startswith("version"):
+			if chk_flag("/client", pcmd, "client"):
+				logging(default_log_file, "Showing client version.")
+			elif chk_flag("/console", pcmd, "console"):
+				logging(default_log_file, "Displaying console version. ~ Sweet Civil Co. <3")
+			elif chk_flag("/python", pcmd, "python"):
+				s = "s" * randint(5, 13)
+				logging(default_log_file, f"S{s}.")
 
-		elif pcmd == "get-console-version":
-			logging(default_log_file, "Displaying console version. ~ Sweet Civil Co. <3")
-		
-		elif pcmd == "get-python-version" or pcmd == "get-py-version":
-			s = "s" * randint(5, 13)
-			logging(default_log_file, f"S{s}.")
-
-		elif pcmd == "open-link":
+		elif pcmd.startswith("open-link"):
 			logging(default_log_file, "Browsing through the web in the console...")
 
-		elif pcmd == "set-profile":
+		elif pcmd.startswith("set-profile"):
 			logging(default_log_file, "Going to profile settings.")
 
 
@@ -600,6 +622,16 @@ def log_cmd(pcmd):
 
 
 # -----------------<  Command functions  >----------------- #
+
+def chk_cmd(cmdio, cmd):
+	if not cmdio == "" and not cmd == "":
+		if cmdio == cmd:
+			return True
+
+def chk_cmd_startswith(cmdio, cmd):
+	if not cmdio == "" and not cmd == "":
+		if cmdio.startswith(cmd):
+			return True
 
 def add_command(command_name, table_append=None):
 	if not command_name == "":
@@ -615,6 +647,13 @@ def create_command(command_name, description, table_append=None):
 			table_append = []
 		table_append.append(f"{full_command}")
 		return table_append
+
+def chk_flag(pflag, search_str, vflag):
+	ppflag = search(r'%s' %pflag, search_str)
+	if ppflag:
+		if not vflag == "":
+			if ppflag.group() == f"--{vflag}" or ppflag.group() == f"/{vflag}":
+				return True
 
 
 
