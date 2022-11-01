@@ -356,7 +356,7 @@ def open_link_gui():
 
 	prompt()
 
-	print(f"{BLUE}[URL]{END} : ", end="")
+	print(f"{CYAN}[URL]{END} : ", end="")
 	clink = input()
 	if not clink == "":
 		if clink == "cancel" or clink == "exit":
