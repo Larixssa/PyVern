@@ -132,17 +132,30 @@ def load_state(wait_time_a, wait_time_b, _compile):
 		add_fake_loading_path("display.get_version", loading_files)
 		add_fake_loading_path("display.get_credits", loading_files)
 		add_fake_loading_path("display.get_cursor", loading_files)
+		add_fake_loading_path("display.get_version_of", loading_files)
+		add_fake_loading_path("display.dislay_version_of", loading_files)
 		add_fake_loading_path("states.loading", loading_files)
 		add_fake_loading_path("logging.console_display", loading_files)
 		add_fake_loading_path("logging.logging_std", loading_files)
 		add_fake_loading_path("misc.newline", loading_files)
 		add_fake_loading_path("misc.chk_cmd", loading_files)
+		add_fake_loading_path("misc.chk_cmd_startswith", loading_files)
 		add_fake_loading_path("misc.repo_desc", loading_files)
+		add_fake_loading_path("misc.get_guidelines", loading_files)
+		add_fake_loading_path("misc.get_detailed_client_parser", loading_files)
 		add_fake_loading_path("misc.get_help", loading_files)
 		add_fake_loading_path("misc.get_time", loading_files)
+		add_fake_loading_path("misc.process_out", loading_files)
 		add_fake_loading_path("parser.cmd_parse", loading_files)
 		add_fake_loading_path("parser.os_exec", loading_files)
 		add_fake_loading_path("parser.command_parser", loading_files)
+		add_fake_loading_path("cl.add_command", loading_files)
+		add_fake_loading_path("cl.create_command", loading_files)
+		add_fake_loading_path("cl.chk_flag", loading_files)
+		add_fake_loading_path("gui.open_link", loading_files)
+		add_fake_loading_path("gui.set_profile", loading_files)
+		add_fake_loading_path("gui.set_username", loading_files)
+		add_fake_loading_path("gui.set_userid", loading_files)
 
 		for i in range(0, len(loading_files)):
 			console_display(f"Compiling {loading_files[i]}...")
@@ -272,6 +285,21 @@ def get_repo_desc():
 	{GREEN}Repository Link:{END} {CYAN}{ITALIC}https://github.com/Larixssa/QyVern-PY{END}
 	"""
 	return repo_desc
+
+def get_guidelines():
+	guidelines = f"""
+	{BOLD}{YELLOW}Guidelines when modifying PyVern{END}:
+
+	{BLUE}* NEVER distribute illegal / malicious copies of PyVern.{END}
+		{GREEN}- It is illegal to make such stuff like that.{END}
+		{GREEN}- I will take action once a copy is reported to me.{END}
+		{GREEN}- This can go the same with forks of the repository.{END}
+
+	{BLUE}* NEVER request a PR for insert malicious payloads / malware.{END}
+		{GREEN}- Every PR in this repository gets researched and looked into.{END}
+		{GREEN}- Once malicious payloads are found, we will decline / close the PR.{END}	
+	"""
+	return guidelines
 
 def get_detailed_client_version():
 	client_version = f"""
@@ -488,6 +516,7 @@ def get_commands_help():
 	create_command("exit", "Exit out of the client.", command_list)
 	create_command("clear", "Clear the screen.", command_list)
 	create_command("get-repo", "Get the repository's info & link.", command_list)
+	create_command("get-guidelines", "Get the guidelines for the repository.", command_list)
 	create_command("help", "Shows a list of commands and their usage.", command_list)
 	create_command("clear-log-file", "Clears the log file.", command_list)
 	create_command("version", "Get the version of the client, console, and python.", command_list)
@@ -509,6 +538,7 @@ def parse_cmd(cmd_io):
 		add_command("exit", command_list)
 		add_command("clear", command_list)
 		add_command("get-repo", command_list)
+		add_command("get-guidelines", command_list)
 		add_command("help", command_list)
 		add_command("clear-log-file", command_list)
 		add_command("version", command_list)
@@ -547,6 +577,9 @@ def command_parser(command_to_parse):
 
 		elif chk_cmd(command_to_parse, "get-repo"):
 			print(f"{get_repo_desc()}", end="")
+
+		elif chk_cmd(command_to_parse, "get-guidelines"):
+			print(f"{get_guidelines()}", end="")
 
 		elif chk_cmd(command_to_parse, "help"):
 			write_to_file("config/set_get_started.txt", "False", "w")
