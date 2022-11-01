@@ -2,6 +2,7 @@ import os
 from os import path
 from platform import python_version, system
 from random import randint
+from re import search
 import time
 import datetime
 import webbrowser
@@ -54,11 +55,22 @@ SUCCESS = f"{GREEN}SUCCESS{END}"
 
 def get_file(file):
 	if not file == "":
-		return file
+		if path.exists(file):
+			return file
+		else:
+			print(f"{process_out('file_warning_exists')}")
 
 def generate_credits():
 	cred = f"\n{CYAN}By: {get_credits()} - Version: {get_version()}{END}"
 	print(cred)
+
+def get_user():
+	user_name = read_file("config/username.txt")
+	return user_name
+
+def get_user_id():
+	user_id = read_file("config/userid.txt")
+	return user_id
 
 def generate_title():
 	title = f"""{PURPLE}{BOLD}
@@ -85,7 +97,16 @@ def init(gen_title, gen_creds, clear_screen, gen_get_started):
 	if gen_get_started == True or gen_get_started == "True":
 		get_started()
 
-	print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
+	username_content = get_user()
+	userid_content = get_user_id()
+	if not username_content == "" and not userid_content == "": 
+		if path.exists("config/username.txt"):
+			if path.exists("config/userid.txt"):
+				print(f"\n{BLUE}[{get_user()}@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+			else:
+				print(f"\n{BLUE}[{get_user()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+	else:
+		print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
 	parse_cmd(prompt.lower())
 
@@ -211,6 +232,14 @@ def chk_cmd(cmdio, cmd):
 		if cmdio == cmd:
 			return True
 
+"""
+def search_flag(cmd, pcmd, cflag):
+	if not cmd == "" and not cflag == "":
+		if cmd.startswith(pcmd):
+			if search(pcmd, cflag):
+				return True
+"""
+
 def get_repo_desc():
 	repo_desc = f"""
 	{BOLD}{YELLOW}# QyVern - PY{END}
@@ -228,25 +257,6 @@ def get_repo_desc():
 	{GREEN}Repository Link:{END} {CYAN}{ITALIC}https://github.com/Larixssa/QyVern-PY{END}
 	"""
 	return repo_desc
-
-def get_help():
-	command_list = []
-
-	create_command("exit", "Exit out of the client.", command_list)
-	create_command("clear", "Clear the screen.", command_list)
-	create_command("get-repo", "Get the repository's info & link.", command_list)
-	create_command("help", "Shows a list of commands and their usage.", command_list)
-	create_command("clear-log-file", "Clears the log file.", command_list)
-	create_command("get-version / get-client-version", "Get the version of the client.", command_list)
-	create_command("get-console-version", "Get the version of the command line console.", command_list)
-	create_command("get-python-version / get-py-version", "Get the version of the python programming language", command_list)
-	create_command("open-link", "Open a certain link within the console.", command_list)
-
-	print(f"\n{GREEN}-------< Available Commands >-------{END}")
-
-	for i in range(0, len(command_list)):
-		print(f"\n{command_list[i]}", end="")
-	newline()
 
 def get_time():
 	time_now = datetime.datetime.now()
@@ -291,6 +301,8 @@ def process_out(stdprocess):
 	if not stdprocess == "":
 		if stdprocess == "cancelled_operation":
 			return f"\n{RED}-- PROCESS CANCELLED --{END}"
+		elif stdprocess == "file_warning_exists":
+			return f"\n{RED}-- FILE DATA ERROR --{END}"
 
 
 
@@ -304,12 +316,12 @@ def open_link_gui():
 	https_prot = "https://"
 
 	def prompt():
-		guide = """
-\t\b\b\b\b\b\b-- GUIDE --
-\t\b\b\b\b\b\b* Input the link you want in the prompt.
-\t\b\b\b\b\b\b* Type in \"cancel\" or \"exit\" if you want to exit the process.
+		guide = f"""
+\t\b\b\b\b\b\b{GREEN}-- GUIDE --{END}
+\t\b\b\b\b\b\b{BLUE}* Input the link you want in the prompt.{END}
+\t\b\b\b\b\b\b{BLUE}* Type in \"cancel\" or \"exit\" if you want to exit the process.{END}
 		"""
-		print(f"\n[ Open Link GUI. ]\n{guide}")
+		print(f"\n{YELLOW}[ Open Link GUI. ]{END}\n{guide}")
 
 	def id_link(link_str):
 
@@ -333,14 +345,14 @@ def open_link_gui():
 				if _parse is None:
 					_parse = f"{link_names[i]} / {link_prefixes[i]}"
 		if parse:
-			print(f"\nOpened Link: {link_str}\nWebsite: {_parse}")
+			print(f"\n{GREEN}Opened Link{END} : {BLUE}{link_str}{END}\n{YELLOW}Website{END} : {CYAN}{_parse}{END}")
 		else:
 			print(f"\nOpened Link: {link_str}")
 		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_str} | Site: {_parse}")
 
 	prompt()
 
-	print("[URL]: ", end="")
+	print(f"{BLUE}[URL]{END} : ", end="")
 	clink = input()
 	if not clink == "":
 		if clink == "cancel" or clink == "exit":
@@ -353,6 +365,82 @@ def open_link_gui():
 				webbrowser.open_new_tab(f"{https_prot}{clink}")
 				id_link(clink)
 
+def set_username():
+
+	username = None
+
+	username_file = read_file("config/username.txt")
+
+	def uname_prompt():
+		minimal_guide = f"{YELLOW}> Set your desired username.{END}"
+		print(f"\n{BLUE}[ Profile Settings > Username. ]{END}\n{minimal_guide}")
+
+	uname_prompt()
+
+	print(f"{CYAN}[New Username]{END} : ", end="")
+	iuname = input()
+	if not iuname == "":
+		if username is None:
+			username = iuname
+		if not username == username_file:
+			print(f"\n{GREEN}> New Username{END} : \"{iuname}\"")
+			write_to_file(get_file("config/username.txt"), username, "w")
+			logging(get_file("logs/logfile.txt"), f"Username set to: {iuname}")
+		else:
+			print(f"\n{RED}[ERROR]{END} : {YELLOW}Local User \"{username}\" already exists, please try again with a different username.{END}")
+
+def set_userid():
+
+	userid = None
+
+	def uid_prompt():
+		minimal_guide = f"{YELLOW}> Randomly generate a User ID.{END}"
+		print(f"\n{BLUE}[ Profile Settings > User ID. ]{END}\n{minimal_guide}")
+
+	uid_prompt()
+
+	print(f"{CYAN}[Generate New ID?]{END} : (Y/N) {GREEN}~{END} ", end="")
+	ioption = input()
+	if not ioption == "":
+		if ioption == "Y":
+			if userid is None:
+				userid = randint(1000, 9999)
+			print(f"\nGenerated ID: {userid}")
+			write_to_file(get_file("config/userid.txt"), str(userid), "w")
+			logging(get_file("logs/logfile.txt"), f"Set User ID / Tag to: {str(userid)}")
+		elif ioption == "N":
+			print(f"{process_out('cancelled_operation')}")
+
+def set_profile():
+
+	def prompt():
+		guide = f"""
+\t\b\b\b\b\b\b{GREEN}-- GUIDE --{END}
+\t\b\b\b\b\b\b{BLUE}* Input an option whether to set the username or ID.{END}
+\t\b\b\b\b\b\b{BLUE}* Each data will be stored locally.{END}
+\t\b\b\b\b\b\b{BLUE}* Type in \"cancel\" or \"exit\" to exit the process.{END}
+		"""
+		print(f"\n{CYAN}[ Profile Settings GUI. ]{END}\n{guide}")
+		init_options()
+
+	def init_options():
+		ui_options = ["[username / name]", "[id / tag]"]
+		ui_descriptions = ["Set the username.", "Set the ID / Tag."]
+		for i in range(0, 2):
+			print(f"{GREEN}{ui_options[i]}{END} : {CYAN}{ui_descriptions[i]}{END}")
+	
+	prompt()
+
+	print(f"\n{YELLOW}[Option]{END} {GREEN}~{END} ", end="")
+	ioption = input()
+	if ioption == "cancel" or ioption == "exit":
+		print(f"{process_out('cancelled_operation')}")
+	else:
+		if ioption == "username" or ioption == "name":
+			set_username()
+		elif ioption == "id" or ioption == "tag":
+			set_userid()
+
 
 
 
@@ -361,6 +449,26 @@ def open_link_gui():
 
 
 # -----------------<  Parser functions  >----------------- #
+
+def get_commands_help():
+	command_list = []
+
+	create_command("exit", "Exit out of the client.", command_list)
+	create_command("clear", "Clear the screen.", command_list)
+	create_command("get-repo", "Get the repository's info & link.", command_list)
+	create_command("help", "Shows a list of commands and their usage.", command_list)
+	create_command("clear-log-file", "Clears the log file.", command_list)
+	create_command("get-version / get-client-version", "Get the version of the client.", command_list)
+	create_command("get-console-version", "Get the version of the command line console.", command_list)
+	create_command("get-python-version / get-py-version", "Get the version of the python programming language", command_list)
+	create_command("open-link", "Open a certain link within the console.", command_list)
+	create_command("set-profile", "Configurate the Username and User ID.", command_list)
+
+	print(f"\n{GREEN}-------< Available Commands >-------{END}")
+
+	for i in range(0, len(command_list)):
+		print(f"\n{command_list[i]}", end="")
+	newline()
 
 def parse_cmd(cmd_io):
 	if not cmd_io == "":
@@ -378,11 +486,12 @@ def parse_cmd(cmd_io):
 		add_command("get-python-version", command_list)
 		add_command("get-py-version", command_list)
 		add_command("open-link", command_list)
+		add_command("set-profile", command_list)
 
 		parse = False
 
 		for i in range(0, len(command_list)):
-			if cmd_io == command_list[i]:
+			if cmd_io.startswith(command_list[i]):
 				parse = True
 		
 		if parse == True:
@@ -414,7 +523,7 @@ def command_parser(command_to_parse):
 
 		elif chk_cmd(command_to_parse, "help"):
 			write_to_file("config/set_get_started.txt", "False", "w")
-			get_help()
+			get_commands_help()
 
 		elif chk_cmd(command_to_parse, "get-version") or chk_cmd(command_to_parse, "get-client-version"):
 			display_version_of("client")
@@ -431,6 +540,9 @@ def command_parser(command_to_parse):
 
 		elif chk_cmd(command_to_parse, "open-link"):
 			open_link_gui()
+
+		elif chk_cmd(command_to_parse, "set-profile"):
+			set_profile()
 
 		# Prevents re-initialization.
 		if not chk_cmd(command_to_parse, "exit"):
@@ -463,6 +575,12 @@ def log_cmd(pcmd):
 		elif pcmd == "get-python-version" or pcmd == "get-py-version":
 			s = "s" * randint(5, 13)
 			logging(default_log_file, f"S{s}.")
+
+		elif pcmd == "open-link":
+			logging(default_log_file, "Browsing through the web in the console...")
+
+		elif pcmd == "set-profile":
+			logging(default_log_file, "Going to profile settings.")
 
 
 
