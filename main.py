@@ -316,14 +316,20 @@ def process_out(stdprocess):
 
 # -----------------<  GUI types  >----------------- #
 
+DEFAULT_GUIDE_MESSAGE = f"\t\b\b\b\b\b\b{GREEN}-- GUIDE --{END}"
+
+def create_guide(inserted_guide):
+	if not inserted_guide == "":
+		return f"\t\b\b\b\b\b\b{BLUE}* {inserted_guide}{END}"
+
 def open_link_gui():
 	https_prot = "https://"
 
 	def prompt():
 		guide = f"""
-\t\b\b\b\b\b\b{GREEN}-- GUIDE --{END}
-\t\b\b\b\b\b\b{BLUE}* Input the link you want in the prompt.{END}
-\t\b\b\b\b\b\b{BLUE}* Type in \"cancel\" or \"exit\" if you want to exit the process.{END}
+{DEFAULT_GUIDE_MESSAGE}
+{create_guide(f'Input the link you want in the prompt.')}
+{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}if you want to exit the process.')}
 		"""
 		print(f"\n{YELLOW}[ Open Link GUI. ]{END}\n{guide}")
 
@@ -419,10 +425,10 @@ def set_profile():
 
 	def prompt():
 		guide = f"""
-\t\b\b\b\b\b\b{GREEN}-- GUIDE --{END}
-\t\b\b\b\b\b\b{BLUE}* Input an option whether to set the username or ID.{END}
-\t\b\b\b\b\b\b{BLUE}* Each data will be stored locally.{END}
-\t\b\b\b\b\b\b{BLUE}* Type in \"cancel\" or \"exit\" to exit the process.{END}
+{DEFAULT_GUIDE_MESSAGE}
+{create_guide(f'Input an option whether to set the username or ID.')}
+{create_guide(f'Each data will be stored locally.')}
+{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}to exit the process.')}
 		"""
 		print(f"\n{CYAN}[ Profile Settings GUI. ]{END}\n{guide}")
 		init_options()
