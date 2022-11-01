@@ -387,7 +387,7 @@ def set_username():
 		if username is None:
 			username = iuname
 		if not username == username_file:
-			print(f"\n{GREEN}> New Username{END} : \"{iuname}\"")
+			print(f"\n{GREEN}> New Username{END} : {CYAN}\"{iuname}\"{END}")
 			write_to_file(get_file("config/username.txt"), username, "w")
 			logging(get_file("logs/logfile.txt"), f"Username set to: {iuname}")
 		else:
@@ -409,7 +409,7 @@ def set_userid():
 		if ioption == "Y":
 			if userid is None:
 				userid = randint(1000, 9999)
-			print(f"\nGenerated ID: {userid}")
+			print(f"\n{GREEN}> New generated ID{END} : {CYAN}{userid}{END}")
 			write_to_file(get_file("config/userid.txt"), str(userid), "w")
 			logging(get_file("logs/logfile.txt"), f"Set User ID / Tag to: {str(userid)}")
 		elif ioption == "N":
