@@ -99,13 +99,17 @@ def init(gen_title, gen_creds, clear_screen, gen_get_started):
 
 	username_content = get_user()
 	userid_content = get_user_id()
-	if not username_content == "" and not userid_content == "": 
-		if path.exists("config/username.txt"):
-			if path.exists("config/userid.txt"):
-				print(f"\n{BLUE}[{get_user()}@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+	if path.exists("config/username.txt"):
+		if path.exists("config/userid.txt"):
+			if not userid_content == "":
+				if username_content == "":
+					print(f"\n{BLUE}[Guest@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+				else:
+					print(f"\n{BLUE}[{get_user()}@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
 			else:
-				print(f"\n{BLUE}[{get_user()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
-	else:
+				if not username_content == "":
+					print(f"\n{BLUE}[{get_user()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+	elif userid_content == "" and username_content == "":
 		print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
 	parse_cmd(prompt.lower())
