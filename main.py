@@ -511,7 +511,7 @@ def failed_config():
 	document_desc = f"""
 	{RED}[ERROR]{END} : {YELLOW}Failed to start up QyVern.{END}
 
-	{GREEN}[REASON]{END} : {BLUE}The \"config\" directory does not exist.
+	{GREEN}[REASON]{END} : {CYAN}The \"config\" directory does not exist.
 	Please read BUILDING.md to know how to setup the \"config\" directory,
 	so that you can fully run QyVern.{END}
 
@@ -584,7 +584,7 @@ def parse_cmd(cmd_io):
 		parse = False
 
 		for i in range(0, len(command_list)):
-			if cmd_io == command_list[i]:
+			if cmd_io.startswith(command_list[i]) or cmd_io == command_list[i]:
 				parse = True
 		
 		if parse == True:
