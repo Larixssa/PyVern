@@ -108,8 +108,8 @@ def init(gen_title, gen_creds, clear_screen, gen_get_started):
 			else:
 				if not username_content == "":
 					print(f"\n{BLUE}[{get_user()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
-	elif userid_content == "" and username_content == "":
-		print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
+				else:
+					print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
 	parse_cmd(prompt.lower())
 
@@ -357,6 +357,11 @@ def process_out(stdprocess):
 		elif stdprocess == "file_warning_exists":
 			return f"\n{RED}-- FILE DATA ERROR --{END}"
 
+def open_link(link_content):
+	if not link_content == "":
+		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_content}")
+		webbrowser.open_new_tab(link_content)
+
 
 
 
@@ -399,7 +404,6 @@ def open_link_gui():
 		_parse = None
 
 		for i in range(0, len(link_prefixes)):
-			
 			if not link_str.find(link_prefixes[i]) == -1:
 				parse = True
 				if _parse is None:
@@ -500,6 +504,38 @@ def set_profile():
 			set_username()
 		elif ioption == "id" or ioption == "tag":
 			set_userid()
+
+def failed_config():
+	document_link = "https://github.com/Larixssa/QyVern-PY/blob/master/docs/BUILDING.md#building"
+
+	document_desc = f"""
+	{RED}[ERROR]{END} : {YELLOW}Failed to start up QyVern.{END}
+
+	{GREEN}[REASON]{END} : {BLUE}The \"config\" directory does not exist.
+	Please read BUILDING.md to know how to setup the \"config\" directory,
+	so that you can fully run QyVern.{END}
+
+	; {ITALIC}Larixssa <3{END}
+	"""
+
+	def prompt_handler(prompt_str):
+		if not prompt_str == "":
+			if prompt_str == "Y" or prompt_str == "y":
+				open_link(document_link)
+			else:
+				if prompt_str == "N" or prompt_str == "n":
+					print(f"{process_out('cancelled_operation')}")
+				else:
+					print(f"{process_out('cancelled_operation')}")
+					print(f"\n{RED}[ERROR]: No such option as{END} {YELLOW}\"{prompt_str}\"{END}\n")
+
+	print(document_desc)
+
+	print(f"{ORANGE}[Open Link?]{END} {GREEN}~{END} (Y/N) ", end="")
+
+	str_option = input()
+
+	prompt_handler(str_option)
 
 
 
@@ -698,13 +734,16 @@ def chk_flag(pflag, search_str, vflag):
 # -----------------<  Main function  >----------------- #
 
 def main():
-	set_compile = read_file("config/set_compile.txt")
-	set_get_started = read_file("config/set_get_started.txt")
-	def_val = True
-	if set_compile == "True":
-		load_state(1, 2, True)
+	if path.exists("config/"):
+		set_compile = read_file("config/set_compile.txt")
+		set_get_started = read_file("config/set_get_started.txt")
+		def_val = True
+		if set_compile == "True":
+			load_state(1, 2, True)
+		else:
+			init(def_val, def_val, def_val, set_get_started)
 	else:
-		init(def_val, def_val, def_val, set_get_started)
+		failed_config()
 	
 if __name__ == '__main__':
 	main()
