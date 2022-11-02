@@ -3,6 +3,7 @@ from os import path
 from platform import python_version, system
 from random import randint
 from re import search, findall
+from decimal import *
 import time
 import datetime
 import webbrowser
@@ -260,14 +261,6 @@ def wait(n):
 def newline():
 	print("\n", end="")
 
-"""
-def search_flag(cmd, pcmd, cflag):
-	if not cmd == "" and not cflag == "":
-		if cmd.startswith(pcmd):
-			if search(pcmd, cflag):
-				return True
-"""
-
 def get_repo_desc():
 	repo_desc = f"""
 	{BOLD}{YELLOW}# QyVern - PY{END}
@@ -464,7 +457,7 @@ def set_userid():
 	uid_prompt()
 
 	print(f"{CYAN}[Generate New ID?]{END} : (Y/N) {GREEN}~{END} ", end="")
-	ioption = input()
+	option = input()
 	if not ioption == "":
 		if ioption == "Y":
 			if userid is None:
@@ -504,6 +497,74 @@ def set_profile():
 			set_username()
 		elif ioption == "id" or ioption == "tag":
 			set_userid()
+
+def math_ui(param_operation, param_stdtype):
+	if not param_stdtype == "":
+		if not param_operation == "":
+			def formula_handler():
+				formula_string = None
+				if param_operation == "add": formula_string = f"{CYAN}a + b{END} = {GREEN}sum{END}"
+				elif param_operation == "sub": formula_string = f"{CYAN}a - b{END} = {GREEN}difference{END}"
+				elif param_operation == "mult": formula_string = f"{CYAN}a * b{END} = {GREEN}product{END}"
+				elif param_operation == "divi": formula_string = f"{CYAN}a / b{END} = {GREEN}quotient{END}"
+				return f"\n{BLUE}[ FORMULA:{END} {formula_string} {BLUE}]{END}\n"
+
+			def math_path_handler():
+				math_title_path = None
+				if param_operation == "add": math_title_path = "Addition"
+				elif param_operation == "sub": math_title_path = "Subtraction"
+				elif param_operation == "mult": math_title_path = "Multiplication"
+				elif param_operation == "divi": math_title_path = "Division"
+				return f"{BLUE}[ Math >{END} {CYAN}{math_title_path}{END} {BLUE}]{END}"
+
+			print(f"\n{math_path_handler()}\n")
+
+			print(f"{YELLOW}[Input first number]{END} {GREEN}~{END} ", end="")
+			first_num = input()
+
+			print(f"{YELLOW}[Input second number]{END} {GREEN}~{END} ", end="")
+			second_num = input()
+
+			if param_stdtype == "standard_math":
+
+				print(f"{formula_handler()}")
+
+				if param_operation == "add":
+					local_sum = math_handler_standard("add", first_num, second_num)
+					print(f"{CYAN}{first_num} + {second_num}{END} = {GREEN}{local_sum}{END}")
+
+				elif param_operation == "sub":
+					local_diff = math_handler_standard("sub", first_num, second_num)
+					print(f"{CYAN}{first_num} - {second_num}{END} = {GREEN}{local_diff}{END}")
+
+				elif param_operation == "mult":
+					local_prod = math_handler_standard("mult", first_num, second_num)
+					print(f"{CYAN}{first_num} * {second_num}{END} = {GREEN}{local_prod}{END}")
+
+				elif param_operation == "divi":
+					local_quot = math_handler_standard("divi", first_num, second_num)
+					print(f"{CYAN}{first_num} / {second_num}{END} = {GREEN}{local_quot}{END}")
+
+		else:
+			def gen_title():
+				title = f"""
+{RED}---------< [REQUIRED] Math Flags [REQUIRED] >---------{END}
+				"""
+				return title
+
+			math_help_table_names = ["add", "sub", "mult", "divi"]
+
+			math_help_table_descriptions = [
+				"sum of two numbers.",
+				"difference of two numbers.",
+				"product of two numbers.",
+				"quotient of two numbers.",
+			]
+
+			print(f"{gen_title()}")
+
+			for i in range(0, len(math_help_table_names)):
+				print(f"{CYAN}[--{math_help_table_names[i]}]{END} : {YELLOW}Get the {math_help_table_descriptions[i]}{END}")
 
 def failed_config():
 	document_link = "https://github.com/Larixssa/QyVern-PY/blob/master/docs/BUILDING.md#building"
@@ -558,6 +619,7 @@ def get_commands_help():
 	create_command("version", "Get the version of the client, console, and python.", command_list)
 	create_command("open-link", "Open a certain link within the console.", command_list)
 	create_command("set-profile", "Configurate the Username and User ID.", command_list)
+	create_command("help", "Perform simple math operations.", command_list)
 
 	print(f"\n{GREEN}-------< Available Commands >-------{END}")
 
@@ -580,6 +642,7 @@ def parse_cmd(cmd_io):
 		add_command("version", command_list)
 		add_command("open-link", command_list)
 		add_command("set-profile", command_list)
+		add_command("math", command_list)
 
 		parse = False
 
@@ -646,6 +709,19 @@ def command_parser(command_to_parse):
 			else:
 				set_profile()
 
+		elif chk_cmd_startswith(command_to_parse, "math"):
+			default_math_stdtype_val = "standard_math"
+			if chk_flag("--add", command_to_parse, "add"):
+				math_ui("add", default_math_stdtype_val)
+			elif chk_flag("--sub", command_to_parse, "sub"):
+				math_ui("sub", default_math_stdtype_val)
+			elif chk_flag("--mult", command_to_parse, "mult"):
+				math_ui("mult", default_math_stdtype_val)
+			elif chk_flag("--divi", command_to_parse, "divi"):
+				math_ui("divi", default_math_stdtype_val)
+			else:
+				math_ui("", default_math_stdtype_val)
+
 		# Prevents re-initialization.
 		if not chk_cmd(command_to_parse, "exit"):
 			init(False, False, False, False)
@@ -682,6 +758,38 @@ def log_cmd(pcmd):
 
 		elif pcmd.startswith("set-profile"):
 			logging(default_log_file, "Going to profile settings.")
+
+# -----------------<  Math functions  >----------------- #
+
+def math_handler_standard(operation, na, nb):
+	result_object = None
+	if not operation == "":
+		if result_object is None:
+			if operation == "add":
+				result_object = return_sum_of(int(na), int(nb))
+			elif operation == "sub":
+				result_object = return_diff_of(int(na), int(nb))
+			elif operation == "mult":
+				result_object = return_prod_of(int(na), int(nb))
+			elif operation == "divi":
+				result_object = return_quot_of(float(na), float(nb))
+		return result_object
+
+def return_sum_of(a, b):
+	sum_var = a + b
+	return sum_var
+
+def return_diff_of(a, b):
+	diff_var = a - b
+	return diff_var
+
+def return_prod_of(a, b):
+	prod_var = a * b
+	return prod_var
+
+def return_quot_of(a, b):
+	quot_var = a / b
+	return quot_var
 
 
 
