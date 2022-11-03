@@ -112,7 +112,12 @@ def init(gen_title, gen_creds, clear_screen, gen_get_started):
 				else:
 					print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
 	prompt = input()
-	parse_cmd(prompt.lower())
+	if not prompt == "":
+		logging(get_file("logs/logfile.txt"), f"Parsed string > \"{prompt}\".")
+		parse_cmd(prompt.lower())
+	else:
+		print(f"{process_out_val('failed_operation', 'NO COMMAND INPUTTED.')}")
+		init(False, False, False, False)
 
 def init_log_files():
 	if system() == "Windows":
@@ -350,6 +355,11 @@ def process_out(stdprocess):
 		elif stdprocess == "file_warning_exists":
 			return f"\n{RED}-- FILE DATA ERROR --{END}"
 
+def process_out_val(stdprocess, processval):
+	if not stdprocess == "" and not processval == "":
+		if stdprocess == "failed_operation":
+			return f"\n{GREEN}@{END} {YELLOW}{get_time()}{END} > {RED}[ERROR]{END} : {YELLOW}FAILED OPERATION{END}.\n{RED}[REASON]{END} : {YELLOW}{processval}{END}"
+
 def open_link(link_content):
 	if not link_content == "":
 		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_content}")
@@ -421,6 +431,8 @@ def open_link_gui():
 			else:
 				webbrowser.open_new_tab(f"{https_prot}{clink}")
 				id_link(clink)
+	else:
+		print(f"{process_out_val('failed_operation', 'LINK NOT FOUND IN THE INPUT.')}")
 
 def set_username():
 
@@ -445,6 +457,8 @@ def set_username():
 			logging(get_file("logs/logfile.txt"), f"Username set to: {iuname}")
 		else:
 			print(f"\n{RED}[ERROR]{END} : {YELLOW}Local User \"{username}\" already exists, please try again with a different username.{END}")
+	else:
+		print(f"{process_out_val('failed_operation', 'USERNAME INPUT IS EMPTY.')}")
 
 def set_userid():
 
@@ -467,6 +481,8 @@ def set_userid():
 			logging(get_file("logs/logfile.txt"), f"Set User ID / Tag to: {str(userid)}")
 		elif ioption == "N":
 			print(f"{process_out('cancelled_operation')}")
+	else:
+		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
 
 def set_profile():
 
@@ -490,13 +506,16 @@ def set_profile():
 
 	print(f"\n{YELLOW}[Option]{END} {GREEN}~{END} ", end="")
 	ioption = input()
-	if ioption == "cancel" or ioption == "exit":
-		print(f"{process_out('cancelled_operation')}")
+	if not input == "":
+		if ioption == "cancel" or ioption == "exit":
+			print(f"{process_out('cancelled_operation')}")
+		else:
+			if ioption == "username" or ioption == "name":
+				set_username()
+			elif ioption == "id" or ioption == "tag":
+				set_userid()
 	else:
-		if ioption == "username" or ioption == "name":
-			set_username()
-		elif ioption == "id" or ioption == "tag":
-			set_userid()
+		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
 
 def math_ui(param_operation, param_stdtype):
 	if not param_stdtype == "":
@@ -521,29 +540,39 @@ def math_ui(param_operation, param_stdtype):
 
 			print(f"{YELLOW}[Input first number]{END} {GREEN}~{END} ", end="")
 			first_num = input()
+			if first_num == "":
+				print(f"{process_out_val('failed_operation', 'EMPTY NUMBER INPUT. (FIRST)')}")
 
 			print(f"{YELLOW}[Input second number]{END} {GREEN}~{END} ", end="")
 			second_num = input()
+			if second_num == "":
+				print(f"{process_out_val('failed_operation', 'EMPTY NUMBER INPUT. (SECOND)')}")
 
-			if param_stdtype == "standard_math":
+			if not first_num == "" and not second_num == "":
 
-				print(f"{formula_handler()}")
+				if param_stdtype == "standard_math":
 
-				if param_operation == "add":
-					local_sum = math_handler_standard("add", first_num, second_num)
-					print(f"{CYAN}{first_num} + {second_num}{END} = {GREEN}{local_sum}{END}")
+					print(f"{formula_handler()}")
 
-				elif param_operation == "sub":
-					local_diff = math_handler_standard("sub", first_num, second_num)
-					print(f"{CYAN}{first_num} - {second_num}{END} = {GREEN}{local_diff}{END}")
+					if param_operation == "add":
+						local_sum = math_handler_standard("add", first_num, second_num)
+						print(f"{CYAN}{first_num} + {second_num}{END} = {GREEN}{local_sum}{END}")
 
-				elif param_operation == "mult":
-					local_prod = math_handler_standard("mult", first_num, second_num)
-					print(f"{CYAN}{first_num} * {second_num}{END} = {GREEN}{local_prod}{END}")
+					elif param_operation == "sub":
+						local_diff = math_handler_standard("sub", first_num, second_num)
+						print(f"{CYAN}{first_num} - {second_num}{END} = {GREEN}{local_diff}{END}")
 
-				elif param_operation == "divi":
-					local_quot = math_handler_standard("divi", first_num, second_num)
-					print(f"{CYAN}{first_num} / {second_num}{END} = {GREEN}{local_quot}{END}")
+					elif param_operation == "mult":
+						local_prod = math_handler_standard("mult", first_num, second_num)
+						print(f"{CYAN}{first_num} * {second_num}{END} = {GREEN}{local_prod}{END}")
+
+					elif param_operation == "divi":
+						local_quot = math_handler_standard("divi", first_num, second_num)
+						print(f"{CYAN}{first_num} / {second_num}{END} = {GREEN}{local_quot}{END}")
+
+			else:
+
+				print(f"{process_out_val('failed_operation', 'EMPTY NUMBERS.')}")
 
 		else:
 			def gen_title():
@@ -766,11 +795,11 @@ def math_handler_standard(operation, na, nb):
 	if not operation == "":
 		if result_object is None:
 			if operation == "add":
-				result_object = return_sum_of(int(na), int(nb))
+				result_object = return_sum_of(float(na), float(nb))
 			elif operation == "sub":
-				result_object = return_diff_of(int(na), int(nb))
+				result_object = return_diff_of(float(na), float(nb))
 			elif operation == "mult":
-				result_object = return_prod_of(int(na), int(nb))
+				result_object = return_prod_of(float(na), float(nb))
 			elif operation == "divi":
 				result_object = return_quot_of(float(na), float(nb))
 		return result_object
