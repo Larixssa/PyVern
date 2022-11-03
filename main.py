@@ -788,6 +788,13 @@ def log_cmd(pcmd):
 		elif pcmd.startswith("set-profile"):
 			logging(default_log_file, "Going to profile settings.")
 
+
+
+
+
+
+
+
 # -----------------<  Math functions  >----------------- #
 
 def math_handler_standard(operation, na, nb):
