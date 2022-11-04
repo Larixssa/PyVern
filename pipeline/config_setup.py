@@ -31,7 +31,8 @@ def start_setup():
 		"set_get_started.txt",
 		"cursor.txt",
 		"username.txt",
-		"userid.txt"
+		"userid.txt",
+		"password.txt"
 	]
 
 	if system() == "Windows":
