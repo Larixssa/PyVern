@@ -84,6 +84,12 @@ def generate_title():
 
 def init(gen_title, gen_creds, clear_screen, gen_get_started):
 
+	local_pass = get_user_data("password")
+
+	if not local_pass == "":
+		os_exec("clear", "ps")
+		required_input_password()
+
 	if clear_screen == True:
 		os_exec("clear", "ps")
 
@@ -197,6 +203,11 @@ def get_cursor(cursor_file):
 	if not cursor_file == "":
 		cursor_str = open(get_file(f"config/{cursor_file}.txt"), "r")
 		return f"{cursor_str.read()} "
+
+def get_user_data(user_data_file):
+	if not user_data_file == "":
+		cur_file = read_file(f"config/{user_data_file}.txt")
+		return cur_file
 
 def display_version_of(version_of):
 	if not version_of == "" or not version_of is None:
@@ -484,6 +495,33 @@ def set_userid():
 	else:
 		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
 
+def set_password():
+
+	pw_content = None
+
+	pw_file = read_file("config/password.txt")
+
+	def prompt():
+		minimal_guide = f"{BLUE}> Create a new password.{END}"
+		print(f"\n{YELLOW}[ Password settings GUI. ]{END}\n{minimal_guide}")
+	
+	prompt()
+
+	print(f"{CYAN}\n[Input new password]{END} {GREEN}~{END} ", end="")
+	pw_input = input()
+	if not pw_input == "":
+		if pw_input == pw_file:
+			print(f"\n{RED}[ERROR]{END} : {YELLOW}Local Password already exists, please try again with a different password.{END}")
+		else:
+			print(f"{BLUE}\n[Confirm new password]{END} {GREEN}~{END} ", end="")
+			confirm_pw_input = input()
+			if not confirm_pw_input == "":
+				print(f"{GREEN}\nCreated new password for user{END} : {YELLOW}\"{get_user_data('username')}\"{END}")
+				write_to_file(get_file("config/password.txt"), str(confirm_pw_input), "w")
+				logging(get_file("logs/logfile.txt"), f"Created new password for new user: \"{get_user_data('username')}\"")
+	else:
+		print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT.')}")
+
 def set_profile():
 
 	def prompt():
@@ -497,10 +535,10 @@ def set_profile():
 		init_options()
 
 	def init_options():
-		ui_options = ["[username / name]", "[id / tag]"]
-		ui_descriptions = ["Set the username.", "Set the ID / Tag."]
-		for i in range(0, 2):
-			print(f"{GREEN}{ui_options[i]}{END} : {CYAN}{ui_descriptions[i]}{END}")
+		ui_options = ["username / name", "id / tag", "password / pass"]
+		ui_descriptions = ["Set the username.", "Set the ID / Tag.", "Set the Password."]
+		for i in range(0, len(ui_options) or len(ui_descriptions)):
+			print(f"{GREEN}[{ui_options[i]}]{END} : {CYAN}{ui_descriptions[i]}{END}")
 	
 	prompt()
 
@@ -514,6 +552,8 @@ def set_profile():
 				set_username()
 			elif ioption == "id" or ioption == "tag":
 				set_userid()
+			elif ioption == "password" or ioption == "pass":
+				set_password() 
 	else:
 		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
 
@@ -627,6 +667,16 @@ def failed_config():
 
 	prompt_handler(str_option)
 
+def required_input_password():
+	print(f"{CYAN}[Input the password for {get_user()}@{get_user_id()}]{END} {GREEN}~{END} ", end="")
+	inputted_password = input()
+	if inputted_password == "":
+		print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT.')}")
+	else:
+		local_pw = get_user_data("password")
+		if inputted_password == local_pw:
+			os_exec("clear", "ps")
+
 
 
 
@@ -735,6 +785,8 @@ def command_parser(command_to_parse):
 				set_username()
 			elif chk_flag("--set-userid", command_to_parse, "set-userid"):
 				set_userid()
+			elif chk_flag("--set-password", command_to_parse, "set-password"):
+				set_password()
 			else:
 				set_profile()
 
@@ -885,7 +937,7 @@ def main():
 		if set_compile == "True":
 			load_state(1, 2, True)
 		else:
-			init(def_val, def_val, def_val, set_get_started)
+			init(def_val, def_val, def_val, False)
 	else:
 		failed_config()
 	
