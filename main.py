@@ -519,8 +519,10 @@ def set_password():
 				print(f"{GREEN}\nCreated new password for user{END} : {YELLOW}\"{get_user_data('username')}\"{END}")
 				write_to_file(get_file("config/password.txt"), str(confirm_pw_input), "w")
 				logging(get_file("logs/logfile.txt"), f"Created new password for new user: \"{get_user_data('username')}\"")
+			else:
+				print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT. (CONFIRMED_PASSWORD)')}")
 	else:
-		print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT.')}")
+		print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT. (PASSWORD_CONTENT)')}")
 
 def set_profile():
 
