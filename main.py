@@ -85,45 +85,59 @@ def generate_title():
 def init(gen_title, gen_creds, clear_screen, gen_get_started):
 
 	local_pass = get_user_data("password")
+	
+	skip_pass = read_file("temp/skip_password.txt")
+
+	input_success = read_file("temp/pw_input_success.txt")
 
 	if not local_pass == "":
-		os_exec("clear", "ps")
-		required_input_password()
-
-	if clear_screen == True:
-		os_exec("clear", "ps")
-
-	if gen_title == True:
-		logging(get_file("logs/logfile.txt"), "Client Loaded.")
-		generate_title()
-
-	if gen_creds == True:
-		generate_credits()
-
-	if gen_get_started == True or gen_get_started == "True":
-		get_started()
-
-	username_content = get_user()
-	userid_content = get_user_id()
-	if path.exists("config/username.txt"):
-		if path.exists("config/userid.txt"):
-			if not userid_content == "":
-				if username_content == "":
-					print(f"\n{BLUE}[Guest@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
-				else:
-					print(f"\n{BLUE}[{get_user()}@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
-			else:
-				if not username_content == "":
-					print(f"\n{BLUE}[{get_user()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
-				else:
-					print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
-	prompt = input()
-	if not prompt == "":
-		logging(get_file("logs/logfile.txt"), f"Parsed string > \"{prompt}\".")
-		parse_cmd(prompt.lower())
+		if skip_pass == "False":
+			os_exec("clear", "ps")
+			required_input_password()
 	else:
-		print(f"{process_out_val('failed_operation', 'NO COMMAND INPUTTED.')}")
-		init(False, False, False, False)
+		if read_file("temp/throw_pw_err.txt") == "True":
+			print(f"\n{YELLOW}\n[WARNING]{END} : {GREEN}We've noticed that you do not have a password, please set a password soon to avoid from someone getting access to the client in your machine.{END}")
+			wait(1)
+		write_to_file(get_file("temp/pw_input_success.txt"), "True", "w") # I know password code is a little clunky, but this is just to prevent to hinder someone from running the program.
+		write_to_file(get_file("temp/throw_pw_err.txt"), "False", "w")
+
+	if input_success == "True":
+		if clear_screen == True:
+			os_exec("clear", "ps")
+
+		if gen_title == True:
+			logging(get_file("logs/logfile.txt"), "Client Loaded.")
+			generate_title()
+
+		if gen_creds == True:
+			generate_credits()
+
+		if gen_get_started == True or gen_get_started == "True":
+			get_started()
+
+		username_content = get_user()
+		userid_content = get_user_id()
+		if path.exists("config/username.txt"):
+			if path.exists("config/userid.txt"):
+				if not userid_content == "":
+					if username_content == "":
+						print(f"\n{BLUE}[Guest@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+					else:
+						print(f"\n{BLUE}[{get_user()}@{get_user_id()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+				else:
+					if not username_content == "":
+						print(f"\n{BLUE}[{get_user()}]{END}{GREEN} ~ {END}{YELLOW}{get_cursor('cursor')}{END}", end="")
+					else:
+						print(f"\n{YELLOW}{get_cursor('cursor')}{END}", end="")
+		prompt = input()
+		if not prompt == "":
+			logging(get_file("logs/logfile.txt"), f"Parsed string > \"{prompt}\".")
+			parse_cmd(prompt.lower())
+		else:
+			print(f"{process_out_val('failed_operation', 'NO COMMAND INPUTTED.')}")
+			init(False, False, False, False)
+	else:
+		wait(3)
 
 def init_log_files():
 	if system() == "Windows":
@@ -135,6 +149,7 @@ def init_log_files():
 
 def load_state(wait_time_a, wait_time_b, _compile):
 	loading_files = []
+	set_get_started = read_file("config/set_get_started.txt")
 	if _compile == True:
 		init_log_files()
 		os_exec("clear", "ps")
@@ -176,7 +191,7 @@ def load_state(wait_time_a, wait_time_b, _compile):
 
 		write_to_file("config/set_compile.txt", "False", "w")
 	logging(get_file("logs/logfile.txt"), "Successfully loaded in!")
-	init(True, True, True, True)
+	init(True, True, True, set_get_started)
 
 
 
@@ -482,7 +497,7 @@ def set_userid():
 	uid_prompt()
 
 	print(f"{CYAN}[Generate New ID?]{END} : (Y/N) {GREEN}~{END} ", end="")
-	option = input()
+	ioption = input()
 	if not ioption == "":
 		if ioption == "Y":
 			if userid is None:
@@ -509,6 +524,8 @@ def set_password():
 
 	print(f"{CYAN}\n[Input new password]{END} {GREEN}~{END} ", end="")
 	pw_input = input()
+	if len(pw_input) <= 3:
+		print(f"{YELLOW}[WARNING]{END} : {GREEN}Having a password that is 3 characters in length has risks for someone getting into your local account easily.{END}")
 	if not pw_input == "":
 		if pw_input == pw_file:
 			print(f"\n{RED}[ERROR]{END} : {YELLOW}Local Password already exists, please try again with a different password.{END}")
@@ -516,9 +533,13 @@ def set_password():
 			print(f"{BLUE}\n[Confirm new password]{END} {GREEN}~{END} ", end="")
 			confirm_pw_input = input()
 			if not confirm_pw_input == "":
-				print(f"{GREEN}\nCreated new password for user{END} : {YELLOW}\"{get_user_data('username')}\"{END}")
 				write_to_file(get_file("config/password.txt"), str(confirm_pw_input), "w")
-				logging(get_file("logs/logfile.txt"), f"Created new password for new user: \"{get_user_data('username')}\"")
+				if not get_user() == "":
+					print(f"{GREEN}\nCreated new password for user{END} : {YELLOW}\"{get_user_data('username')}\"{END}")
+					logging(get_file("logs/logfile.txt"), f"Created new password for new user: \"{get_user_data('username')}\"")
+				else:
+					print(f"{GREEN}\nCreated new client password.{END}")
+					logging(get_file("logs/logfile.txt"), f"Created new client password.")
 			else:
 				print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT. (CONFIRMED_PASSWORD)')}")
 	else:
@@ -670,14 +691,30 @@ def failed_config():
 	prompt_handler(str_option)
 
 def required_input_password():
-	print(f"{CYAN}[Input the password for {get_user()}@{get_user_id()}]{END} {GREEN}~{END} ", end="")
+	set_get_started = read_file("config/set_get_started.txt")
+	if not get_user() == "" and not get_user_id() == "":
+		print(f"{PURPLE}\n[Input the password for {get_user()}@{get_user_id()}]{END} {GREEN}~{END} ", end="")
+	else:
+		print(f"{PURPLE}\n[Input the client password]{END} {GREEN}~{END} ", end="")
 	inputted_password = input()
 	if inputted_password == "":
 		print(f"{process_out_val('failed_operation', 'EMPTY PASSWORD INPUT.')}")
 	else:
 		local_pw = get_user_data("password")
 		if inputted_password == local_pw:
+			write_to_file(get_file("temp/skip_password.txt"), "True", "w")
+			write_to_file(get_file("temp/pw_input_success.txt"), "True", "w")
+			if not get_user() and not get_user_id() == "":
+				print(f"{GREEN}Successfully logged in as{END} : {PURPLE}[{get_user()}@{get_user_id()}]{END}\n{BLUE}{ITALIC}# Please wait while we start the client...{END}")
+				logging(get_file("logs/logfile.txt"), f"Logged in as \"{get_user()}@{get_user_id()}\"")
+			else:
+				print(f"{GREEN}Successfully logged into the client{END}\n{BLUE}{ITALIC}# Please wait while we start the client...{END}")
+				logging(get_file("logs/logfile.txt"), f"Successfully logged into the client.")
+			wait(3)
 			os_exec("clear", "ps")
+		else:
+			print(f"{YELLOW}\n[WARNING]{END} : {GREEN}The password you entered is incorrect, please try again.{END}")
+		init(True, True, True, set_get_started)
 
 
 
@@ -752,6 +789,9 @@ def command_parser(command_to_parse):
 			os_exec("clear", "ps")
 
 		elif chk_cmd(command_to_parse, "exit"):
+			if not get_user_data("password") == "":
+				write_to_file(get_file("temp/skip_password.txt"), "False", "w")
+				write_to_file(get_file("temp/pw_input_success.txt"), "False", "w")
 			os_exec("exit", "default")
 			os_exec("clear", "ps")
 
@@ -939,7 +979,7 @@ def main():
 		if set_compile == "True":
 			load_state(1, 2, True)
 		else:
-			init(def_val, def_val, def_val, False)
+			init(def_val, def_val, def_val, set_get_started)
 	else:
 		failed_config()
 	
