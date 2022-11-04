@@ -156,6 +156,7 @@ def load_state(wait_time_a, wait_time_b, _compile):
 		add_fake_loading_path("misc.get_help", loading_files)
 		add_fake_loading_path("misc.get_time", loading_files)
 		add_fake_loading_path("misc.process_out", loading_files)
+		add_fake_loading_path("misc.process_out_val", loading_files)
 		add_fake_loading_path("parser.cmd_parse", loading_files)
 		add_fake_loading_path("parser.os_exec", loading_files)
 		add_fake_loading_path("parser.command_parser", loading_files)
@@ -166,6 +167,10 @@ def load_state(wait_time_a, wait_time_b, _compile):
 		add_fake_loading_path("gui.set_profile", loading_files)
 		add_fake_loading_path("gui.set_username", loading_files)
 		add_fake_loading_path("gui.set_userid", loading_files)
+		add_fake_loading_path("gui.set_password", loading_files)
+		add_fake_loading_path("usr.password_required", laoding_files)
+		add_fake_loading_path("usr.password_handler", loading_files)
+		add_fake_loading_path("usr.password_message_handler", loading_files)
 
 		for i in range(0, len(loading_files)):
 			console_display(f"Compiling {loading_files[i]}...")
@@ -753,7 +758,7 @@ def get_commands_help():
 	create_command("version", "Get the version of the client, console, and python.", False, command_list)
 	create_command("open-link", "Open a certain link within the console.", False, command_list)
 	create_command("set-profile", "Configurate the Username and User ID.", False, command_list)
-	create_command("help", "Perform simple math operations.", False, command_list)
+	create_command("math", "Perform simple math operations.", False, command_list)
 	create_command("reset-data", "Resets the data for everything. (i.e. User, Password, etc.)", True, command_list)
 
 	print(f"\n{GREEN}-------< Available Commands >-------{END}")
