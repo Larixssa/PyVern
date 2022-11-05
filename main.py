@@ -907,17 +907,20 @@ def log_cmd(pcmd):
 
 	if not pcmd == "":
 
-		if pcmd == "help":
+		if chk_cmd(pcmd, "help"):
 			logging(default_log_file, "Getting commands...")
 
-		elif pcmd == "exit":
+		elif chk_cmd(pcmd, "exit"):
 			logging(default_log_file, "Exiting out of the client...")
 
-		elif pcmd == "clear":
+		elif chk_cmd(pcmd, "clear"):
 			logging(default_log_file, "Screen cleared.")
 
-		elif pcmd == "get-repo":
+		elif chk_cmd(pcmd, "get-repo"):
 			logging(default_log_file, "Getting repository info & link...")
+
+		elif chk_cmd(pcmd, "credits"):
+			logging(default_log_file, "Getting the credits...")
 
 		if pcmd.startswith("version"):
 			if chk_flag("/client", pcmd, "client"):
