@@ -194,6 +194,10 @@ def get_credits():
 	creds_f = open(get_file("client_env/credits.txt"), "r")
 	return creds_f.read()
 
+def get_owner():
+	owner_f = open(get_file("client_env/og_owner.txt"), "r")
+	return owner_f.read()
+
 def get_version():
 	version_f = open(get_file("client_env/version.txt"), "r")
 	return version_f.read()
@@ -737,6 +741,15 @@ def reset_data():
 		else:
 			print(f"{process_out_val('failed_operation', 'EMPTY INPUT OR INCORRECT LETTER.')}")
 
+def credits_gui():
+	credits_content = f"""
+\t{CYAN}{ITALIC}[ -----< QyVern Credits >----- ]{END}\n
+\t{BLUE}> (Created by){END} : {PURPLE}{get_credits()}{END}
+\t{RED}> (Original Project by){END} : {YELLOW}{get_owner()}{END}
+\t{CYAN}> (Created in){END} : {BLUE}{python_version()}{END}
+	"""
+	print(f"{credits_content}", end="")
+
 
 
 
@@ -747,19 +760,24 @@ def reset_data():
 # -----------------<  Parser functions  >----------------- #
 
 def get_commands_help():
+
+	def init_commands():
+		create_command("help", "Shows a list of commands and their usage.", False, command_list)
+		create_command("exit", "Exit out of the client.", False, command_list)
+		create_command("clear", "Clear the screen.", False, command_list)
+		create_command("get-repo", "Get the repository's info & link.", False, command_list)
+		create_command("get-guidelines", "Get the guidelines for the repository.", False, command_list)
+		create_command("version", "Get the version of the client, console, and python.", False, command_list)
+		create_command("credits", "Show the credits for the repository.", False, command_list)
+		create_command("clear-log-file", "Clears the log file.", False, command_list)
+		create_command("open-link", "Open a certain link within the console.", False, command_list)
+		create_command("set-profile", "Configurate the Username and User ID.", False, command_list)
+		create_command("math", "Perform simple math operations.", False, command_list)
+		create_command("reset-data", "Resets the data for everything. (i.e. User, Password, etc.)", True, command_list)
+
 	command_list = []
 
-	create_command("exit", "Exit out of the client.", False, command_list)
-	create_command("clear", "Clear the screen.", False, command_list)
-	create_command("get-repo", "Get the repository's info & link.", False, command_list)
-	create_command("get-guidelines", "Get the guidelines for the repository.", False, command_list)
-	create_command("help", "Shows a list of commands and their usage.", False, command_list)
-	create_command("clear-log-file", "Clears the log file.", False, command_list)
-	create_command("version", "Get the version of the client, console, and python.", False, command_list)
-	create_command("open-link", "Open a certain link within the console.", False, command_list)
-	create_command("set-profile", "Configurate the Username and User ID.", False, command_list)
-	create_command("math", "Perform simple math operations.", False, command_list)
-	create_command("reset-data", "Resets the data for everything. (i.e. User, Password, etc.)", True, command_list)
+	init_commands()
 
 	print(f"\n{GREEN}-------< Available Commands >-------{END}")
 
@@ -769,21 +787,25 @@ def get_commands_help():
 
 def parse_cmd(cmd_io):
 
-	if not cmd_io == "":
-
-		command_list = []
-
+	def init_commands():
+		add_command("help", command_list)
 		add_command("exit", command_list)
 		add_command("clear", command_list)
 		add_command("get-repo", command_list)
 		add_command("get-guidelines", command_list)
-		add_command("help", command_list)
-		add_command("clear-log-file", command_list)
 		add_command("version", command_list)
+		add_command("credits", command_list)
+		add_command("clear-log-file", command_list)
 		add_command("open-link", command_list)
 		add_command("set-profile", command_list)
 		add_command("math", command_list)
 		add_command("reset-data", command_list)
+
+	if not cmd_io == "":
+
+		command_list = []
+
+		init_commands()
 
 		parse = False
 
@@ -824,6 +846,9 @@ def command_parser(command_to_parse):
 		elif chk_cmd(command_to_parse, "help"):
 			write_to_file("config/set_get_started.txt", "False", "w")
 			get_commands_help()
+
+		elif chk_cmd(command_to_parse, "credits"):
+			credits_gui()
 
 		elif chk_cmd_startswith(command_to_parse, "version"):
 			if chk_flag("/client", command_to_parse, "client"):
@@ -882,16 +907,16 @@ def log_cmd(pcmd):
 
 	if not pcmd == "":
 
-		if pcmd.startswith("help"):
+		if pcmd == "help":
 			logging(default_log_file, "Getting commands...")
 
-		elif pcmd.startswith("exit"):
+		elif pcmd == "exit":
 			logging(default_log_file, "Exiting out of the client...")
 
-		elif pcmd.startswith("clear"):
+		elif pcmd == "clear":
 			logging(default_log_file, "Screen cleared.")
 
-		elif pcmd.startswith("get-repo"):
+		elif pcmd == "get-repo":
 			logging(default_log_file, "Getting repository info & link...")
 
 		if pcmd.startswith("version"):
@@ -903,11 +928,33 @@ def log_cmd(pcmd):
 				s = "s" * randint(5, 13)
 				logging(default_log_file, f"S{s}.")
 
-		elif pcmd.startswith("open-link"):
+		elif chk_cmd(pcmd, "open-link"):
 			logging(default_log_file, "Browsing through the web in the console...")
 
 		elif pcmd.startswith("set-profile"):
-			logging(default_log_file, "Going to profile settings.")
+			if chk_flag("--set-username", pcmd, "set-username"):
+				logging(default_log_file, "Setting / Changing the username...")
+			elif chk_flag("--set-userid", pcmd, "set-userid"):
+				logging(default_log_file, "Generating a new user ID...")
+			elif chk_flag("--set-password", pcmd, "set-password"):
+				logging(default_log_file, "Creating a new password...")
+			else:
+				logging(default_log_file, "Going to profile settings.")
+
+		elif pcmd.startswith("math"):
+			if chk_flag("--add", pcmd, "add"):
+				logging(default_log_file, "Getting the sum of two numbers.")
+			elif chk_flag("--sub", pcmd, "sub"):
+				logging(default_log_file, "Getting the difference of two numbers.")
+			elif chk_flag("--mult", pcmd, "mult"):
+				logging(default_log_file, "Getting the product of two numbers.")
+			elif chk_flag("--divi", pcmd, "divi"):
+				logging(default_log_file, "Getting the quotient of two numbers.")
+			else:
+				logging(default_log_file, "Performing math operations...")
+
+		elif chk_cmd(pcmd, "reset-data"):
+			logging(default_log_file, "Entering data reset...")
 
 
 
