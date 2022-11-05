@@ -746,7 +746,7 @@ def credits_gui():
 \t{CYAN}{ITALIC}[ -----< QyVern Credits >----- ]{END}\n
 \t{BLUE}> (Created by){END} : {PURPLE}{get_credits()}{END}
 \t{RED}> (Original Project by){END} : {YELLOW}{get_owner()}{END}
-\t{CYAN}> (Created in){END} : {BLUE}{python_version()}{END}
+\t{CYAN}> (Created in){END} : {BLUE}Python - {python_version()}{END}
 	"""
 	print(f"{credits_content}", end="")
 
