@@ -82,15 +82,15 @@ def generate_title():
 	print(title, end="")
 	print(f"\n{create_bar('-', 65)}")
 
-def init(gen_title, gen_creds, clear_screen, gen_get_started):
+def init(gen_title, gen_creds, do_clear_screen, gen_get_started):
 
 	user_password = get_user_data("password")
 
 	if user_password == "":
 		set_password_now()
 
-	if clear_screen == True:
-		os_exec("clear", "ps")
+	if do_clear_screen == True:
+		clear_screen()
 	if gen_title == True:
 		logging(get_file("logs/logfile.txt"), "Client Loaded.")
 		generate_title()
@@ -135,7 +135,7 @@ def load_state(wait_time_a, wait_time_b, _compile):
 	set_get_started = read_file("config/set_get_started.txt")
 	if _compile == True:
 		init_log_files()
-		os_exec("clear", "ps")
+		clear_screen()
 		print(f"{BLUE}[ Compiling QyVern - {get_version()} ]{END}")
 
 		add_fake_loading_path("display.create_bar", loading_files)
@@ -348,7 +348,7 @@ def read_file(_file):
 	rfile = open(get_file(_file), "r")
 	return rfile.read()
 
-def os_exec(command, mode):
+def os_exec(command, mode=""):
 	sys_name = system()
 	if not command == "":
 		if sys_name == "Windows":
@@ -357,8 +357,26 @@ def os_exec(command, mode):
 			elif mode == "default":
 				os.system(command)
 		elif sys_name == "Linux":
-			if mode == "default":
-				os.system(command)
+			os.system(command)
+
+def clear_screen():
+	command_prefix = None
+	sys_name = system()
+	if sys_name == "Windows":
+		command_prefix = "cls"
+	elif sys_name == "Linux":
+		command_prefix = "clear"
+	os.system(command_prefix)
+
+def client_exit():
+	command_prefix = None
+	sys_name = system()
+	clear_screen()
+	if sys_name == "Windows":
+		command_prefix = "exit"
+	elif sys_name == "Linux":
+		command_prefix = "quit"
+	os.system(command_prefix)
 
 def logfile_clearer():
 	if path.exists("logs/logfile.txt"):
@@ -682,6 +700,113 @@ def failed_config():
 
 	prompt_handler(str_option)
 
+def ui_create_handler(type_parser_thing):
+	
+	type_name = None
+
+	if not path.exists("scripts/"):
+		os_exec("mkdir scripts", "default")
+
+	if not type_parser_thing == "":
+		if type_parser_thing == "file":
+			type_name = "File"
+		elif type_parser_thing == "directory":
+			type_name = "Directory"
+		elif type_parser_thing == "script" or type_parser_thing == "module":
+			type_name = "Script / Module"
+
+	def gen_title():
+		gtitle = f"""
+{CYAN}[ Create{END} {BLUE}{type_name}{END} {CYAN}GUI. ]{END}
+{YELLOW}> Input a name for your {type_name.lower()}{END}.
+		"""
+		return gtitle
+	
+	def create_handler(input_name, input_f_extension):
+		command_prefix = None
+		exec_with = None
+		sys_name = system()
+		if sys_name == "Windows":
+			command_prefix = "ni"
+			exec_with = "ps"
+		elif sys_name == "Linux":
+			command_prefix = "touch"
+			exec_with = "default"
+		if not input_name == "":
+			if type_parser_thing == "file":
+				os_exec(f"{command_prefix} {input_name}.{input_f_extension}", exec_with)
+			elif type_parser_thing == "directory":
+				os_exec(f"mkdir {input_name}", exec_with)
+			elif type_parser_thing == "script" or type_parser_thing == "module":
+				os_exec(f"{command_prefix} scripts/{input_name}.py", exec_with)
+
+	print(f"{gen_title()}")
+
+	print(f"{RED}*{END} {PURPLE}[{type_name} name]{END} {GREEN}~{END} ", end="")
+	i_name = input()
+	if i_name == "":
+		print(f"{process_out_val('failed_operation', 'EMPTY FILENAME.')}")
+	
+	if not i_name == "exit" or i_name == "cancel":
+		if type_parser_thing == "file":
+			print(f"{YELLOW}[{type_name} file extension]{END} {GREEN}~{END} ", end="")
+			i_ext = input()
+			if i_ext == "":
+				print(f"{process_out_val('failed_operation', 'EMPTY FILE EXTENSION.')}")
+			if not i_ext == "exit" or i_ext == "cancel":
+				if not i_name == "" and not i_ext == "":
+					create_handler(str(i_name), str(i_ext))
+				else:
+					print(f"{process_out_val('failed_operation', 'EMPTY FILE NAME AND EXTENSION.')}\n{process_out('cancelled_operation')}")
+			else:
+				print(f"{process_out('cancelled_operation')}")
+		else:
+			if not i_name == "exit" or i_name == "clear":
+				if not i_name == "":
+					create_handler(str(i_name), None)
+				else:
+					print(f"{process_out_val('failed_operation', 'EMPTY FILE NAME AND EXTENSION.')}\n{process_out('cancelled_operation')}")
+	else:
+		print(f"{process_out('cancelled_operation')}")
+
+def ui_create():
+
+	clear_screen()
+
+	def prompt():
+		guide = f"""
+{create_guide('Choose what to create.')}
+{create_guide('It can be a directory or a file, and it must have a name and a file type.')}
+{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}to exit the process.')}
+		"""
+		print(f"\n{CYAN}[ Create / Add new object. ]{END}\n{guide}")
+
+	def prompt_options():
+		ui_options = ["file", "directory", "script"]
+		ui_descriptions = ["a file", "a directory", "a PyVern module / script"]
+		prompt()
+		for i in range(0, len(ui_options) or len(ui_descriptions)):
+			print(f"{CYAN}[{ui_options[i]}]{END} : {BLUE}Create {ui_descriptions[i]}.{END}")
+
+	def prompt_handler(input_parse):
+		handler_parse = None
+		if not input_parse == "":
+			handler_parse = input_parse.lower()
+			if not input_parse == "exit" or input_parse == "clear":
+				ui_create_handler(handler_parse)
+			else:
+				print(f"{process_out('cancelled_operation')}")
+
+		else:
+			print(f"process_out('failed_operation', 'EMPTY INPUT.')")
+
+	prompt_options()
+
+	print(f"\n{YELLOW}[Option]{END} {GREEN}~{END} ", end="")
+	i_option = input()
+	
+	prompt_handler(i_option)
+
 def set_password_now():
 	def question_prompt():
 		question = f"{YELLOW}[WARNING]{END} : {GREEN}You currently don't have a password set up. Please set up a password now to reduce the risk of someone getting access to your local account.{END}"
@@ -730,6 +855,8 @@ def reset_data():
 		"username"
 	]
 
+	clear_screen()
+
 	print(f"{RED}\n[Reset Data?]{END} (Y/N) {YELLOW}~{END} ", end="")
 	i_option = input()
 	if not i_option == "":
@@ -773,6 +900,7 @@ def get_commands_help():
 		create_command("open-link", "Open a certain link within the console.", False, command_list)
 		create_command("set-profile", "Configurate the Username and User ID.", False, command_list)
 		create_command("math", "Perform simple math operations.", False, command_list)
+		create_command("create", "Create a file, directory, or script.", True, command_list)
 		create_command("reset-data", "Resets the data for everything. (i.e. User, Password, etc.)", True, command_list)
 
 	command_list = []
@@ -799,6 +927,7 @@ def parse_cmd(cmd_io):
 		add_command("open-link", command_list)
 		add_command("set-profile", command_list)
 		add_command("math", command_list)
+		add_command("create", command_list)
 		add_command("reset-data", command_list)
 
 	if not cmd_io == "":
@@ -831,11 +960,10 @@ def command_parser(command_to_parse):
 		log_cmd(command_to_parse)
 	
 		if chk_cmd(command_to_parse, "clear"):
-			os_exec("clear", "ps")
+			clear_screen()
 
 		elif chk_cmd(command_to_parse, "exit"):
-			os_exec("exit", "default")
-			os_exec("clear", "ps")
+			client_exit()
 
 		elif chk_cmd(command_to_parse, "get-repo"):
 			print(f"{get_repo_desc()}", end="")
@@ -890,8 +1018,21 @@ def command_parser(command_to_parse):
 			else:
 				math_ui("", default_math_stdtype_val)
 
+		elif chk_cmd_startswith(command_to_parse, "create"):
+			password_req = password_prompt()
+			chkd_pw = password_handler(password_req)
+			password_message_handler(chkd_pw, "Resetting data.")
+			if chkd_pw == True:
+				if chk_flag("/file", command_to_parse, "file"):
+					ui_create_handler("file")
+				elif chk_flag("/directory", command_to_parse, "directory"):
+					ui_create_handler("directory")
+				elif chk_flag("/script", command_to_parse, "script") or chk_flag("/module", command_to_parse, "module"):
+					ui_create_handler("script")
+				else:
+					ui_create()
+
 		elif chk_cmd(command_to_parse, "reset-data"):
-			# New password input system.
 			password_req = password_prompt()
 			chkd_pw = password_handler(password_req)
 			password_message_handler(chkd_pw, "Resetting data.")
