@@ -753,7 +753,7 @@ def ui_create_handler(type_parser_thing):
 			i_ext = input()
 			if i_ext == "":
 				print(f"{process_out_val('failed_operation', 'EMPTY FILE EXTENSION.')}")
-			if not i_ext == "exit" or i_ext == "cancel":
+			if not i_ext == "exit" or not i_ext == "cancel":
 				if not i_name == "" and not i_ext == "":
 					create_handler(str(i_name), str(i_ext))
 				else:
@@ -761,7 +761,7 @@ def ui_create_handler(type_parser_thing):
 			else:
 				print(f"{process_out('cancelled_operation')}")
 		else:
-			if not i_name == "exit" or i_name == "clear":
+			if not i_name == "exit" or not i_name == "cancel":
 				if not i_name == "":
 					create_handler(str(i_name), None)
 				else:
