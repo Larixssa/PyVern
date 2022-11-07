@@ -458,15 +458,16 @@ def open_link_gui():
 	print(f"{CYAN}[URL]{END} : ", end="")
 	clink = input()
 	if not clink == "":
+		clink_str_content = None
 		if clink == "cancel" or clink == "exit":
 			print(f"{process_out('cancelled_operation')}")
 		else:
 			if clink.startswith(https_prot):
-				webbrowser.open_new_tab(f"{clink}")
-				id_link(clink)
+				clink_str_content = clink
 			else:
-				webbrowser.open_new_tab(f"{https_prot}{clink}")
-				id_link(clink)
+				clink_str_content = f"{https_prot}{clink}"
+			id_link(clink_str_content)
+			webbrowser.open_new_tab(clink_str_content)
 	else:
 		print(f"{process_out_val('failed_operation', 'LINK NOT FOUND IN THE INPUT.')}")
 
@@ -595,10 +596,13 @@ def math_ui(param_operation, param_stdtype):
 		if not param_operation == "":
 			def formula_handler():
 				formula_string = None
-				if param_operation == "add": formula_string = f"{CYAN}a + b{END} = {GREEN}sum{END}"
-				elif param_operation == "sub": formula_string = f"{CYAN}a - b{END} = {GREEN}difference{END}"
-				elif param_operation == "mult": formula_string = f"{CYAN}a * b{END} = {GREEN}product{END}"
-				elif param_operation == "divi": formula_string = f"{CYAN}a / b{END} = {GREEN}quotient{END}"
+				operation_type = None
+				res_type = None
+				if param_operation == "add": operation_type = "+"; res_type = "sum"
+				elif param_operation == "sub": operation_type = "-"; res_type = "difference"
+				elif param_operation == "mult": operation_type = "*"; res_type = "product"
+				elif param_operation == "divi": operation_type = "/"; res_type = "quotient"
+				formula_string = f"{CYAN}a {operation_type} b{END} = {GREEN}{res_type}{END}"
 				return f"\n{BLUE}[ FORMULA:{END} {formula_string} {BLUE}]{END}\n"
 
 			def math_path_handler():
@@ -627,22 +631,29 @@ def math_ui(param_operation, param_stdtype):
 
 					print(f"{formula_handler()}")
 
+					local_res = None
+					local_str_operation = None
+					local_operation = None
+
 					if param_operation == "add":
-						local_sum = math_handler_standard("add", first_num, second_num)
-						print(f"{CYAN}{first_num} + {second_num}{END} = {GREEN}{local_sum}{END}")
+						local_str_operation = "add"
+						local_operation = "+"
 
 					elif param_operation == "sub":
-						local_diff = math_handler_standard("sub", first_num, second_num)
-						print(f"{CYAN}{first_num} - {second_num}{END} = {GREEN}{local_diff}{END}")
+						local_str_operation = "sub"
+						local_operation = "-"
 
 					elif param_operation == "mult":
-						local_prod = math_handler_standard("mult", first_num, second_num)
-						print(f"{CYAN}{first_num} * {second_num}{END} = {GREEN}{local_prod}{END}")
+						local_str_operation = "mult"
+						local_operation = "*"
 
 					elif param_operation == "divi":
-						local_quot = math_handler_standard("divi", first_num, second_num)
-						print(f"{CYAN}{first_num} / {second_num}{END} = {GREEN}{local_quot}{END}")
+						local_str_operation = "divi"
+						local_operation = "/"
 
+					local_res = math_handler_standard(local_str_operation, first_num, second_num)
+
+					print(f"{CYAN}{first_num} {local_operation} {second_num}{END} = {GREEN}{local_res}{END}")
 			else:
 
 				print(f"{process_out_val('failed_operation', 'EMPTY NUMBERS.')}")
