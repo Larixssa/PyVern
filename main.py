@@ -416,6 +416,8 @@ def create_guide(inserted_guide):
 	if not inserted_guide == "":
 		return f"\t\b\b\b\b\b\b{BLUE}* {inserted_guide}{END}"
 
+DEFAULT_EXIT_MESSAGE = f"{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}if you want to exit the process.')}"
+
 def open_link_gui():
 	https_prot = "https://"
 
@@ -423,7 +425,7 @@ def open_link_gui():
 		guide = f"""
 {DEFAULT_GUIDE_MESSAGE}
 {create_guide(f'Input the link you want in the prompt.')}
-{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}if you want to exit the process.')}
+{DEFAULT_EXIT_MESSAGE}
 		"""
 		print(f"\n{YELLOW}[ Open Link GUI. ]{END}\n{guide}")
 
@@ -563,7 +565,7 @@ def set_profile():
 {DEFAULT_GUIDE_MESSAGE}
 {create_guide(f'Input an option whether to set the username or ID.')}
 {create_guide(f'Each data will be stored locally.')}
-{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}to exit the process.')}
+{DEFAULT_EXIT_MESSAGE}
 		"""
 		print(f"\n{CYAN}[ Profile Settings GUI. ]{END}\n{guide}")
 		init_options()
@@ -590,6 +592,34 @@ def set_profile():
 				set_password() 
 	else:
 		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
+
+def ui_set_cursor():
+	def prompt():
+		guide = f"""
+{DEFAULT_GUIDE_MESSAGE}
+{create_guide(f'Input a new cursor.')}
+{create_guide(f'Inputting a new cursor will override the existing one.')}
+{DEFAULT_EXIT_MESSAGE}
+		"""
+		print(f"\n[ Cursor Customization GUI. ]\n{guide}")
+	def set_cursor_handler(input_parse):
+		current_cursor = read_file("config/cursor.txt")
+		if not input_parse == "":
+			if not input_parse == current_cursor:
+				if input_parse == "exit" or input_parse == "close":
+					print(f"{process_out('cancelled_operation')}")
+				else:
+					print(f"\n{GREEN}New cursor{END} : {YELLOW}\"{input_parse}\"{END}")
+					write_to_file("config/cursor.txt", input_parse, "w")
+					logging(get_file("logs/logfile.txt"), f"Set cursor to: \"{input_parse}\"")
+			else:
+				print(f"\n{YELLOW}[WARNING]{END} : {RED}Cursor{END} {YELLOW}({input_parse}){END} {RED}already exists, please try again with a different cursor.{END}")
+		else:
+			print(f"{process_out_val('failed_operation', 'EMPTY CURSOR INPUT.')}")
+	prompt()
+	print(f"{CYAN}[Input New Cursor]{END} {GREEN}~{END} ", end="")
+	new_cursor = input()
+	set_cursor_handler(new_cursor)
 
 def math_ui(param_operation, param_stdtype):
 	if not param_stdtype == "":
@@ -786,9 +816,10 @@ def ui_create():
 
 	def prompt():
 		guide = f"""
+{DEFAULT_GUIDE_MESSAGE}
 {create_guide('Choose what to create.')}
 {create_guide('It can be a directory or a file, and it must have a name and a file type.')}
-{create_guide(f'Type in {ITALIC}{YELLOW}cancel{END} {BLUE}or {ITALIC}{YELLOW}exit{END} {BLUE}to exit the process.')}
+{DEFAULT_EXIT_MESSAGE}
 		"""
 		print(f"\n{CYAN}[ Create / Add new object. ]{END}\n{guide}")
 
@@ -910,6 +941,7 @@ def get_commands_help():
 		create_command("clear-log-file", "Clears the log file.", False, command_list)
 		create_command("open-link", "Open a certain link within the console.", False, command_list)
 		create_command("set-profile", "Configurate the Username and User ID.", False, command_list)
+		create_command("set-cursor", "Set a new cursor and override your existing one.", False, command_list)
 		create_command("math", "Perform simple math operations.", False, command_list)
 		create_command("create", "Create a file, directory, or script.", True, command_list)
 		create_command("reset-data", "Resets the data for everything. (i.e. User, Password, etc.)", True, command_list)
@@ -937,6 +969,7 @@ def parse_cmd(cmd_io):
 		add_command("clear-log-file", command_list)
 		add_command("open-link", command_list)
 		add_command("set-profile", command_list)
+		add_command("set-cursor", command_list)
 		add_command("math", command_list)
 		add_command("create", command_list)
 		add_command("reset-data", command_list)
@@ -1015,6 +1048,9 @@ def command_parser(command_to_parse):
 				set_password()
 			else:
 				set_profile()
+		
+		elif chk_cmd(command_to_parse, "set-cursor"):
+			ui_set_cursor()			
 
 		elif chk_cmd_startswith(command_to_parse, "math"):
 			default_math_stdtype_val = "standard_math"
