@@ -12,7 +12,7 @@ Using - ``Windows Terminal``
 
 -----
 
-![image](https://user-images.githubusercontent.com/116927055/200302583-9be86333-dff5-4c47-9100-d1f48c5c09d0.png)
+![image](https://user-images.githubusercontent.com/116927055/200583042-043b7d5a-5436-43dc-bd25-af2b13221957.png)
 
 -----
 
