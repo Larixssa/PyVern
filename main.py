@@ -131,54 +131,69 @@ def init_log_files():
 		os_exec("touch logs/logfile.txt", "default")
 
 def load_state(wait_time_a, wait_time_b, _compile):
-	loading_files = []
-	set_get_started = read_file("config/set_get_started.txt")
-	if _compile == True:
-		init_log_files()
-		clear_screen()
-		print(f"{BLUE}[ Compiling QyVern - {get_version()} ]{END}")
 
-		add_fake_loading_path("display.create_bar", loading_files)
-		add_fake_loading_path("display.get_version", loading_files)
-		add_fake_loading_path("display.get_credits", loading_files)
-		add_fake_loading_path("display.get_cursor", loading_files)
-		add_fake_loading_path("display.get_version_of", loading_files)
-		add_fake_loading_path("display.dislay_version_of", loading_files)
-		add_fake_loading_path("states.loading", loading_files)
-		add_fake_loading_path("logging.console_display", loading_files)
-		add_fake_loading_path("logging.logging_std", loading_files)
-		add_fake_loading_path("misc.newline", loading_files)
-		add_fake_loading_path("misc.chk_cmd", loading_files)
-		add_fake_loading_path("misc.chk_cmd_startswith", loading_files)
-		add_fake_loading_path("misc.repo_desc", loading_files)
-		add_fake_loading_path("misc.get_guidelines", loading_files)
-		add_fake_loading_path("misc.get_detailed_client_parser", loading_files)
-		add_fake_loading_path("misc.get_help", loading_files)
-		add_fake_loading_path("misc.get_time", loading_files)
-		add_fake_loading_path("misc.process_out", loading_files)
-		add_fake_loading_path("misc.process_out_val", loading_files)
-		add_fake_loading_path("parser.cmd_parse", loading_files)
-		add_fake_loading_path("parser.os_exec", loading_files)
-		add_fake_loading_path("parser.command_parser", loading_files)
-		add_fake_loading_path("cl.add_command", loading_files)
-		add_fake_loading_path("cl.create_command", loading_files)
-		add_fake_loading_path("cl.chk_flag", loading_files)
-		add_fake_loading_path("gui.open_link", loading_files)
-		add_fake_loading_path("gui.set_profile", loading_files)
-		add_fake_loading_path("gui.set_username", loading_files)
-		add_fake_loading_path("gui.set_userid", loading_files)
-		add_fake_loading_path("gui.set_password", loading_files)
-		add_fake_loading_path("usr.password_required", laoding_files)
-		add_fake_loading_path("usr.password_handler", loading_files)
-		add_fake_loading_path("usr.password_message_handler", loading_files)
+	def init_loading_files(loading_table=None):
+
+		if loading_table is None:
+			loading_table = []
+		
+		add_fake_loading_path("display.create_bar", loading_table)
+		add_fake_loading_path("display.get_version", loading_table)
+		add_fake_loading_path("display.get_credits", loading_table)
+		add_fake_loading_path("display.get_cursor", loading_table)
+		add_fake_loading_path("display.get_version_of", loading_table)
+		add_fake_loading_path("display.dislay_version_of", loading_table)
+		add_fake_loading_path("states.loading", loading_table)
+		add_fake_loading_path("logging.console_display", loading_table)
+		add_fake_loading_path("logging.logging_std", loading_table)
+		add_fake_loading_path("misc.newline", loading_table)
+		add_fake_loading_path("misc.chk_cmd", loading_table)
+		add_fake_loading_path("misc.chk_cmd_startswith", loading_table)
+		add_fake_loading_path("misc.repo_desc", loading_table)
+		add_fake_loading_path("misc.get_guidelines", loading_table)
+		add_fake_loading_path("misc.get_detailed_client_version", loading_table)
+		add_fake_loading_path("misc.get_help", loading_table)
+		add_fake_loading_path("misc.get_time", loading_table)
+		add_fake_loading_path("misc.process_out", loading_table)
+		add_fake_loading_path("misc.process_out_val", loading_table)
+		add_fake_loading_path("parser.cmd_parse", loading_table)
+		add_fake_loading_path("parser.os_exec", loading_table)
+		add_fake_loading_path("parser.command_parser", loading_table)
+		add_fake_loading_path("cl.add_command", loading_table)
+		add_fake_loading_path("cl.create_command", loading_table)
+		add_fake_loading_path("cl.chk_flag", loading_table)
+		add_fake_loading_path("gui.open_link", loading_table)
+		add_fake_loading_path("gui.set_profile", loading_table)
+		add_fake_loading_path("gui.set_cursor", loading_table)
+		add_fake_loading_path("gui.set_username", loading_table)
+		add_fake_loading_path("gui.set_userid", loading_table)
+		add_fake_loading_path("gui.set_password", loading_table)
+		add_fake_loading_path("gui.create_gui", loading_table)
+		add_fake_loading_path("gui.create_gui_handler", loading_table)
+		add_fake_loading_path("usr.password_required", loading_table)
+		add_fake_loading_path("usr.password_handler", loading_table)
+		add_fake_loading_path("usr.password_message_handler", loading_table)
+
+		return loading_table
+	
+	loading_files = []
+	
+	set_get_started = read_file("config/set_get_started.txt")
+	
+	if _compile == True:
+		
+		init_log_files(); clear_screen(); init_loading_files(loading_files)
+		
+		print(f"{BLUE}\n[ Compiling QyVern... ]{END}{get_version_of('client')}\n{create_bar('-', 65)}")
 
 		for i in range(0, len(loading_files)):
 			console_display(f"Compiling {loading_files[i]}...")
 			logging(get_file("logs/logfile.txt"), f"Compiling file > {loading_files[i]}")
 			wait(randint(wait_time_a, wait_time_b))
-
 		write_to_file("config/set_compile.txt", "False", "w")
+	
 	logging(get_file("logs/logfile.txt"), "Successfully loaded in!")
+	
 	init(True, True, True, set_get_started)
 
 
@@ -191,16 +206,16 @@ def load_state(wait_time_a, wait_time_b, _compile):
 # -----------------<  Display functions  >----------------- #
 
 def get_credits():
-	creds_f = open(get_file("client_env/credits.txt"), "r")
-	return creds_f.read()
+	creds_f = read_file("client_env/credits.txt")
+	return creds_f
 
 def get_owner():
-	owner_f = open(get_file("client_env/og_owner.txt"), "r")
-	return owner_f.read()
+	owner_f = read_file("client_env/og_owner.txt")
+	return owner_f
 
 def get_version():
-	version_f = open(get_file("client_env/version.txt"), "r")
-	return version_f.read()
+	version_f = read_file("client_env/version.txt")
+	return version_f
 
 def get_console_version():
 	c_version_f = read_file("client_env/console_version.txt")
@@ -266,7 +281,7 @@ def logging(_file, message):
 			f.writelines(f"[Console] {get_time()} : {message}\n")
 
 def get_started():
-	print(f"\n{GREEN}: Type{END} {YELLOW}\"help\"{END} {GREEN}to get started.{END}")
+	print(f"{GREEN}: Type{END} {YELLOW}\"help\"{END} {GREEN}to get started.{END}")
 
 def wait(n):
 	if n > 0:
@@ -330,6 +345,10 @@ def get_detailed_client_version():
 def get_time():
 	time_now = datetime.datetime.now()
 	return time_now.strftime("%H:%M:%S")
+
+def get_time_and_date():
+	time_and_date_now = datetime.datetime.now()
+	return time_and_date_now.strftime("%H:%M:%S - %b-%d-%y")
 
 def add_fake_loading_path(_fpath, _ttable=None):
 	if not _fpath == "":
@@ -398,8 +417,8 @@ def process_out_val(stdprocess, processval):
 
 def open_link(link_content):
 	if not link_content == "":
-		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_content}")
 		webbrowser.open_new_tab(link_content)
+		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_content} @ {get_time_and_date()}")
 
 
 
@@ -453,7 +472,7 @@ def open_link_gui():
 			print(f"\n{GREEN}Opened Link{END} : {BLUE}{link_str}{END}\n{YELLOW}Website{END} : {CYAN}{_parse}{END}")
 		else:
 			print(f"\nOpened Link: {link_str}")
-		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_str} | Site: {_parse}")
+		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_str} | Site: {_parse} @ {get_time_and_date()}")
 
 	prompt()
 
