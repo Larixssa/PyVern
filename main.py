@@ -81,6 +81,7 @@ def generate_title():
 	{END}"""
 	print(title, end="")
 	print(f"\n{create_bar('-', 65)}")
+	logging(get_file("logs/logfile.txt"), "Client Loaded.")
 
 def init(gen_title, gen_creds, do_clear_screen, gen_get_started):
 
@@ -91,11 +92,13 @@ def init(gen_title, gen_creds, do_clear_screen, gen_get_started):
 
 	if do_clear_screen == True:
 		clear_screen()
+	
 	if gen_title == True:
-		logging(get_file("logs/logfile.txt"), "Client Loaded.")
 		generate_title()
+	
 	if gen_creds == True:
 		generate_credits()
+	
 	if gen_get_started == True or gen_get_started == "True":
 		get_started()
 
@@ -232,37 +235,37 @@ def get_user_data(user_data_file):
 		return cur_file
 
 def display_version_of(version_of):
-	if not version_of == "" or not version_of is None:
+	if not version_of == "" or version_of is not None:
 
 		version_keyword = None
 
-		if version_of == "client" or version_of == "main":
+		if version_of in ["client", "main"]:
 			print(f"\n{PURPLE}[Client Version]{END} : {BLUE}{get_version()}{END}")
 			version_keyword = "Client"
 
-		elif version_of == "console" or version_of == "cl":
+		elif version_of in ["console", "cl"]:
 			print(f"\n{BLUE}[Console Version]{END}\n{CYAN}{get_console_version()}{END}")
 			version_keyword = "Console"
 
-		elif version_of == "python" or version_of == "py":
+		elif version_of in ["python", "py"]:
 			print(f"\n{LIGHT_GREEN}[Python Version]{END} : {YELLOW}{python_version()}{END}")
 			version_keyword = "Python"
 
 		logging(get_file("logs/logfile.txt"), f"Getting the version of {version_keyword}")
 
 def get_version_of(version_of):
-	if not version_of == "" or not version_of is None:
+	if not version_of == "" or version_of is not None:
 
 		version_content = None
 
 		if version_content is None:
-			if version_of == "client" or version_of == "main":
+			if version_of in ["client", "main"]:
 				version_content = f"\n{PURPLE}[Client Version]{END} : {CYAN}{get_version()}{END}"
 
-			elif version_of == "console" or version_of == "cl":
+			elif version_of in ["console", "cl"]:
 				version_content = f"\n{PURPLE}[Console Version]{END}\n{CYAN}{get_console_version()}{END}"
 
-			elif version_of == "python" or version_of == "py":
+			elif version_of in ["python", "py"]:
 				version_content = f"\n{LIGHT_GREEN}[Python Version]{END} : {YELLOW}{python_version()}{END}"
 
 		return version_content
@@ -359,7 +362,7 @@ def add_fake_loading_path(_fpath, _ttable=None):
 		return _ttable
 
 def write_to_file(_file, content, mode):
-	if not _file is None or not _file == "":
+	if _file is not None or not _file == "":
 		with open(get_file(_file), mode) as f:
 			f.write(content)
 
@@ -427,6 +430,34 @@ def open_link(link_content):
 
 
 
+# -----------------<  File utilities  >----------------- #
+
+def new_file(on_os, filename, ext):
+	command_prefix = None
+	exec_in = None
+	if not on_os in ["", None] and not filename in ["", None] and not ext in ["", None]:
+		if on_os == "Windows":
+			command_prefix = "ni"; exec_in = "ps"
+		elif on_os == "Linux":
+			command_prefix = "touch"; exec_in = "default"
+		os_exec(f"{command_prefix} {filename}.{ext}", exec_in)
+
+def new_directory(on_os, directory_name):
+	exec_in = None
+	if not on_os in ["", None] and not directory_name in ["", None]:
+		if on_os == "Windows":
+			exec_in = "ps"
+		elif on_os == "Linux":
+			exec_in = "default"
+		os_exec(f"mkdir {directory_name}", exec_in)
+
+
+
+
+
+
+
+
 # -----------------<  GUI types  >----------------- #
 
 DEFAULT_GUIDE_MESSAGE = f"\t\b\b\b\b\b\b{GREEN}-- GUIDE --{END}"
@@ -461,18 +492,19 @@ def open_link_gui():
 		link_names = ["YouTube", "Discord", "Twitter", "FaceBook", "GitHub"]
 
 		parse = False
-		_parse = None
+	
+		cite_parse = None
 
 		for i in range(0, len(link_prefixes)):
 			if not link_str.find(link_prefixes[i]) == -1:
 				parse = True
-				if _parse is None:
-					_parse = f"{link_names[i]} / {link_prefixes[i]}"
+				if cite_parse is None:
+					cite_parse = f"{link_names[i]} / {link_prefixes[i]}"
 		if parse:
-			print(f"\n{GREEN}Opened Link{END} : {BLUE}{link_str}{END}\n{YELLOW}Website{END} : {CYAN}{_parse}{END}")
+			print(f"\n{GREEN}Opened Link{END} : {BLUE}{link_str}{END}\n{YELLOW}Website{END} : {CYAN}{cite_parse}{END}")
 		else:
 			print(f"\nOpened Link: {link_str}")
-		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_str} | Site: {_parse} @ {get_time_and_date()}")
+		logging(get_file("logs/logfile.txt"), f"Opened Link: {link_str} | Site: {cite_parse} @ {get_time_and_date()}")
 
 	prompt()
 
@@ -480,7 +512,7 @@ def open_link_gui():
 	clink = input()
 	if not clink == "":
 		clink_str_content = None
-		if clink == "cancel" or clink == "exit":
+		if clink in ["cancel", "exit"]:
 			print(f"{process_out('cancelled_operation')}")
 		else:
 			if clink.startswith(https_prot):
@@ -531,13 +563,13 @@ def set_userid():
 	print(f"{CYAN}[Generate New ID?]{END} : (Y/N) {GREEN}~{END} ", end="")
 	ioption = input()
 	if not ioption == "":
-		if ioption == "Y":
+		if ioption in ["Y", "y"]:
 			if userid is None:
 				userid = randint(1000, 9999)
 			print(f"\n{GREEN}> New generated ID{END} : {CYAN}{userid}{END}")
 			write_to_file(get_file("config/userid.txt"), str(userid), "w")
 			logging(get_file("logs/logfile.txt"), f"Set User ID / Tag to: {str(userid)}")
-		elif ioption == "N":
+		elif ioption in ["N", "n"]:
 			print(f"{process_out('cancelled_operation')}")
 	else:
 		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
@@ -556,7 +588,7 @@ def set_password():
 
 	print(f"{CYAN}\n[Input new password]{END} {GREEN}~{END} ", end="")
 	pw_input = input()
-	if len(pw_input) <= 3:
+	if len(pw_input) <= 4:
 		print(f"{YELLOW}[WARNING]{END} : {GREEN}Having a password that is 3 characters in length has risks for someone getting into your local account easily.{END}")
 	if not pw_input == "":
 		if pw_input == pw_file:
@@ -600,14 +632,14 @@ def set_profile():
 	print(f"\n{YELLOW}[Option]{END} {GREEN}~{END} ", end="")
 	ioption = input()
 	if not input == "":
-		if ioption == "cancel" or ioption == "exit":
+		if ioption in ["cancel", "exit"]:
 			print(f"{process_out('cancelled_operation')}")
 		else:
-			if ioption == "username" or ioption == "name":
+			if ioption in ["username", "name"]:
 				set_username()
-			elif ioption == "id" or ioption == "tag":
+			elif ioption in ["id", "tag"]:
 				set_userid()
-			elif ioption == "password" or ioption == "pass":
+			elif ioption in ["password", "pass"]:
 				set_password() 
 	else:
 		print(f"{process_out_val('failed_operation', 'EMPTY OPTION INPUT.')}")
@@ -625,7 +657,7 @@ def ui_set_cursor():
 		current_cursor = read_file("config/cursor.txt")
 		if not input_parse == "":
 			if not input_parse == current_cursor:
-				if input_parse == "exit" or input_parse == "close":
+				if input_parse in ["exit", "close"]:
 					print(f"{process_out('cancelled_operation')}")
 				else:
 					print(f"\n{GREEN}New cursor{END} : {YELLOW}\"{input_parse}\"{END}")
@@ -743,10 +775,10 @@ def failed_config():
 
 	def prompt_handler(prompt_str):
 		if not prompt_str == "":
-			if prompt_str == "Y" or prompt_str == "y":
+			if prompt_str in ["Y", "y"]:
 				open_link(document_link)
 			else:
-				if prompt_str == "N" or prompt_str == "n":
+				if prompt_str in ["N", "n"]:
 					print(f"{process_out('cancelled_operation')}")
 				else:
 					print(f"{process_out('cancelled_operation')}")
@@ -765,14 +797,14 @@ def ui_create_handler(type_parser_thing):
 	type_name = None
 
 	if not path.exists("scripts/"):
-		os_exec("mkdir scripts", "default")
+		new_directory(system(), "scripts")
 
 	if not type_parser_thing == "":
 		if type_parser_thing == "file":
 			type_name = "File"
 		elif type_parser_thing == "directory":
 			type_name = "Directory"
-		elif type_parser_thing == "script" or type_parser_thing == "module":
+		elif type_parser_thing in ["script", "module"]:
 			type_name = "Script / Module"
 
 	def gen_title():
@@ -786,19 +818,14 @@ def ui_create_handler(type_parser_thing):
 		command_prefix = None
 		exec_with = None
 		sys_name = system()
-		if sys_name == "Windows":
-			command_prefix = "ni"
-			exec_with = "ps"
-		elif sys_name == "Linux":
-			command_prefix = "touch"
-			exec_with = "default"
 		if not input_name == "":
 			if type_parser_thing == "file":
 				os_exec(f"{command_prefix} {input_name}.{input_f_extension}", exec_with)
+				new_file(sys_name, input_name, input_f_extension)
 			elif type_parser_thing == "directory":
-				os_exec(f"mkdir {input_name}", exec_with)
-			elif type_parser_thing == "script" or type_parser_thing == "module":
-				os_exec(f"{command_prefix} scripts/{input_name}.py", exec_with)
+				new_directory(sys_name, input_name)
+			elif type_parser_thing in ["script", "module"]:
+				new_file(sys_name, f"scripts/{input_name}", "py")
 
 	print(f"{gen_title()}")
 
@@ -807,13 +834,13 @@ def ui_create_handler(type_parser_thing):
 	if i_name == "":
 		print(f"{process_out_val('failed_operation', 'EMPTY FILENAME.')}")
 	
-	if not i_name == "exit" or i_name == "cancel":
+	if not i_name in ["exit", "cancel"]:
 		if type_parser_thing == "file":
 			print(f"{YELLOW}[{type_name} file extension]{END} {GREEN}~{END} ", end="")
 			i_ext = input()
 			if i_ext == "":
 				print(f"{process_out_val('failed_operation', 'EMPTY FILE EXTENSION.')}")
-			if not i_ext == "exit" or not i_ext == "cancel":
+			if not i_ext in ["exit", "cancel"]:
 				if not i_name == "" and not i_ext == "":
 					create_handler(str(i_name), str(i_ext))
 				else:
@@ -821,7 +848,7 @@ def ui_create_handler(type_parser_thing):
 			else:
 				print(f"{process_out('cancelled_operation')}")
 		else:
-			if not i_name == "exit" or not i_name == "cancel":
+			if not i_name in ["exit", "cancel"]:
 				if not i_name == "":
 					create_handler(str(i_name), None)
 				else:
@@ -853,7 +880,7 @@ def ui_create():
 		handler_parse = None
 		if not input_parse == "":
 			handler_parse = input_parse.lower()
-			if not input_parse == "exit" or input_parse == "clear":
+			if not input_parse in ["exit", "clear"]:
 				ui_create_handler(handler_parse)
 			else:
 				print(f"{process_out('cancelled_operation')}")
@@ -876,7 +903,7 @@ def set_password_now():
 	print(f"{BLUE}[Create a new password?]{END} (Y/N) {GREEN}~{END} ", end="")
 	i_option = input()
 	if not i_option == "":
-		if i_option == "Y" or i_option == "y":
+		if i_option in ["Y", "y"]:
 			set_password()
 		else:
 			print(f"{process_out('cancelled_operation')}")
@@ -921,10 +948,10 @@ def reset_data():
 	print(f"{RED}\n[Reset Data?]{END} (Y/N) {YELLOW}~{END} ", end="")
 	i_option = input()
 	if not i_option == "":
-		if i_option == "Y" or i_option == "y":
+		if i_option in ["Y", "y"]:
 			for i in range(0, len(config_table)):
 				write_to_file(get_file(f"config/{config_table[i]}"), "", "w")
-		elif i_option == "N" or i_option == "n":
+		elif i_option in ["N", "n"]:
 			print(f"{process_out('cancelled_operation')}")
 		else:
 			print(f"{process_out_val('failed_operation', 'EMPTY INPUT OR INCORRECT LETTER.')}")
@@ -1249,7 +1276,7 @@ def chk_flag(pflag, search_str, vflag):
 	ppflag = search(r'%s' %pflag, search_str)
 	if ppflag:
 		if not vflag == "":
-			if ppflag.group() == f"--{vflag}" or ppflag.group() == f"/{vflag}":
+			if ppflag.group() in [f"--{vflag}", f"/{vflag}"]:
 				return True
 
 
